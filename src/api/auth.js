@@ -1,4 +1,5 @@
-import client from './client';
+import client, { tokenStorage } from './client';
+import * as SecureStore from 'expo-secure-store';
 
 export async function register({ displayName, email, password }) {
   const res = await client.post('/api/auth/register', {
@@ -21,8 +22,13 @@ export async function fetchMe() {
 
 export async function logout() {
   try {
-    await client.post('/api/auth/logout');
-  } catch {
-    // Ignore — logout client-side regardless
+    const refreshToken = await tokenStorage.getRefreshToken();
+    await client.post(
+      '/api/auth/logout',
+      { refreshToken: refreshToken ?? null },
+      { timeout: 3000 }
+    );
+  } catch (e) {
+    if (__DEV__) console.log('Server logout skipped:', e.message);
   }
 }

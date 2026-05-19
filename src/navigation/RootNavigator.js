@@ -3,11 +3,9 @@ import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useAuthStore } from '../stores/authStore';
 import { useTheme } from '../theme/ThemeContext';
-import AuthStack from './AuthStack';
 import AppStack from './AppStack';
 
 export default function RootNavigator() {
-  const user = useAuthStore((s) => s.user);
   const isLoading = useAuthStore((s) => s.isLoading);
   const bootstrap = useAuthStore((s) => s.bootstrap);
   const { colors, hydrated } = useTheme();
@@ -15,11 +13,7 @@ export default function RootNavigator() {
   useEffect(() => {
     bootstrap();
   }, [bootstrap]);
-console.log('🔍 RootNavigator state:', {
-  isLoading,
-  hydrated,
-  user: !!user,
-});
+
   if (isLoading || !hydrated) {
     return (
       <View
@@ -37,7 +31,7 @@ console.log('🔍 RootNavigator state:', {
 
   return (
     <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
+      <AppStack />
     </NavigationContainer>
   );
 }

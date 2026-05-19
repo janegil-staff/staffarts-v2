@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -9,6 +8,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../theme/ThemeContext';
 
@@ -49,145 +49,146 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: colors.background }}
-    >
-      <ScrollView
-        contentContainerStyle={{
-          padding: spacing.xl,
-          paddingTop: 60,
-          paddingBottom: 60,
-        }}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
       >
-        <Text
-          style={{
-            fontSize: fontSize.xxl,
-            fontWeight: '600',
-            color: colors.navy,
-            marginBottom: spacing.xs,
+        <ScrollView
+          contentContainerStyle={{
+            padding: spacing.xl,
+            paddingBottom: spacing.xxxl,
           }}
+          keyboardShouldPersistTaps="handled"
         >
-          Create account
-        </Text>
-        <Text
-          style={{
-            fontSize: fontSize.md,
-            color: colors.textMuted,
-            marginBottom: spacing.xxl,
-          }}
-        >
-          Join Staff Arts
-        </Text>
-
-        <TextInput
-          style={inputStyle}
-          placeholder="Display name"
-          placeholderTextColor={colors.textFaint}
-          value={displayName}
-          onChangeText={setDisplayName}
-          autoCapitalize="words"
-          editable={!isSubmitting}
-        />
-
-        <TextInput
-          style={inputStyle}
-          placeholder="Email"
-          placeholderTextColor={colors.textFaint}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          editable={!isSubmitting}
-        />
-
-        <TextInput
-          style={inputStyle}
-          placeholder="Password (min 8 characters)"
-          placeholderTextColor={colors.textFaint}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          editable={!isSubmitting}
-        />
-
-        <TextInput
-          style={[
-            inputStyle,
-            !passwordsMatch && { borderColor: colors.danger },
-          ]}
-          placeholder="Confirm password"
-          placeholderTextColor={colors.textFaint}
-          value={confirm}
-          onChangeText={setConfirm}
-          secureTextEntry
-          editable={!isSubmitting}
-        />
-
-        {!passwordsMatch && (
           <Text
             style={{
-              color: colors.danger,
-              marginBottom: spacing.md,
-              fontSize: fontSize.sm,
+              fontSize: fontSize.xxl,
+              fontWeight: '600',
+              color: colors.navy,
+              marginBottom: spacing.xs,
             }}
           >
-            Passwords don't match
+            Create account
           </Text>
-        )}
-        {error && (
           <Text
             style={{
-              color: colors.danger,
-              marginBottom: spacing.md,
-              fontSize: fontSize.sm,
+              fontSize: fontSize.md,
+              color: colors.textMuted,
+              marginBottom: spacing.xxl,
             }}
           >
-            {error}
+            Join Staff Arts
           </Text>
-        )}
 
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.accent,
-            padding: spacing.lg,
-            borderRadius: radius.md,
-            alignItems: 'center',
-            marginTop: spacing.sm,
-            opacity: canSubmit ? 1 : 0.5,
-          }}
-          onPress={onSubmit}
-          disabled={!canSubmit}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color={colors.textInverse} />
-          ) : (
+          <TextInput
+            style={inputStyle}
+            placeholder="Display name"
+            placeholderTextColor={colors.textFaint}
+            value={displayName}
+            onChangeText={setDisplayName}
+            autoCapitalize="words"
+            editable={!isSubmitting}
+          />
+
+          <TextInput
+            style={inputStyle}
+            placeholder="Email"
+            placeholderTextColor={colors.textFaint}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            editable={!isSubmitting}
+          />
+
+          <TextInput
+            style={inputStyle}
+            placeholder="Password (min 8 characters)"
+            placeholderTextColor={colors.textFaint}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            editable={!isSubmitting}
+          />
+
+          <TextInput
+            style={[
+              inputStyle,
+              !passwordsMatch && { borderColor: colors.danger },
+            ]}
+            placeholder="Confirm password"
+            placeholderTextColor={colors.textFaint}
+            value={confirm}
+            onChangeText={setConfirm}
+            secureTextEntry
+            editable={!isSubmitting}
+          />
+
+          {!passwordsMatch && (
             <Text
               style={{
-                color: colors.textInverse,
-                fontSize: fontSize.md,
-                fontWeight: '600',
+                color: colors.danger,
+                marginBottom: spacing.md,
+                fontSize: fontSize.sm,
               }}
             >
-              Create account
+              Passwords don't match
             </Text>
           )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{ marginTop: spacing.xl, alignItems: 'center' }}
-        >
-          <Text style={{ color: colors.textMuted, fontSize: fontSize.md }}>
-            Already have an account?{' '}
-            <Text style={{ color: colors.navy, fontWeight: '600' }}>
-              Log in
+          {error && (
+            <Text
+              style={{
+                color: colors.danger,
+                marginBottom: spacing.md,
+                fontSize: fontSize.sm,
+              }}
+            >
+              {error}
             </Text>
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          )}
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: colors.accent,
+              padding: spacing.lg,
+              borderRadius: radius.md,
+              alignItems: 'center',
+              marginTop: spacing.sm,
+              opacity: canSubmit ? 1 : 0.5,
+            }}
+            onPress={onSubmit}
+            disabled={!canSubmit}
+          >
+            {isSubmitting ? (
+              <ActivityIndicator color={colors.textInverse} />
+            ) : (
+              <Text
+                style={{
+                  color: colors.textInverse,
+                  fontSize: fontSize.md,
+                  fontWeight: '600',
+                }}
+              >
+                Create account
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ marginTop: spacing.xl, alignItems: 'center' }}
+          >
+            <Text style={{ color: colors.textMuted, fontSize: fontSize.md }}>
+              Already have an account?{' '}
+              <Text style={{ color: colors.navy, fontWeight: '600' }}>
+                Log in
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
