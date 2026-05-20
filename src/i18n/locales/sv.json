@@ -188,5 +188,16 @@
   "artworkAddDepth": "+ Lägg till djup (för 3D-verk)",
   "artworkRemoveDepth": "− Ta bort djup",
   "authGateTitle": "Gå med i Staff Arts-gemenskapen",
-  "authGateSubtitle": "Logga in för att dela din konst, följa konstnärer och få kontakt med samlare."
+  "authGateSubtitle": "Logga in för att dela din konst, följa konstnärer och få kontakt med samlare.",
+  "tabHome": "Hem",
+  "tabExplore": "Utforska",
+  "tabShows": "Visningar",
+  "tabProfile": "Profil",
+  "aboutAppTab": "Om",
+  "aboutAppTagline": "Ett hem för konst, konstnärer och samlare.",
+  "aboutAppWhatTitle": "Vad är Staff Arts?",
+  "aboutAppWhat": "Staff Arts är en marknadsplats och mötesplats för originalkonst. Upptäck konstverk, följ konstnärer, utforska utställningar och evenemang och få direktkontakt med skaparna.",
+  "aboutAppStoryTitle": "Historien bakom namnet",
+  "aboutAppStory": "Staff Arts är uppkallat till minne av ”Staff” — en mixed media-konstnär vars verk väver samman material, texturer och känsla till något helt eget. Den här appen byggdes som ett kärleksbrev till den andan.",
+  "aboutAppFooter": "Qup DA · staffarts.com"
 }

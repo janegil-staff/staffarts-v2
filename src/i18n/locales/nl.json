@@ -188,5 +188,16 @@
   "artworkAddDepth": "+ Diepte toevoegen (voor 3D-werk)",
   "artworkRemoveDepth": "− Diepte verwijderen",
   "authGateTitle": "Word lid van de Staff Arts-community",
-  "authGateSubtitle": "Log in om je kunst te delen, kunstenaars te volgen en in contact te komen met verzamelaars."
+  "authGateSubtitle": "Log in om je kunst te delen, kunstenaars te volgen en in contact te komen met verzamelaars.",
+  "tabHome": "Home",
+  "tabExplore": "Ontdek",
+  "tabShows": "Shows",
+  "tabProfile": "Profiel",
+  "aboutAppTab": "Over",
+  "aboutAppTagline": "Een thuis voor kunst, kunstenaars en verzamelaars.",
+  "aboutAppWhatTitle": "Wat is Staff Arts?",
+  "aboutAppWhat": "Staff Arts is een marktplaats en ontmoetingsplek voor originele kunst. Ontdek kunstwerken, volg kunstenaars, verken tentoonstellingen en evenementen, en kom in direct contact met de makers.",
+  "aboutAppStoryTitle": "Het verhaal achter de naam",
+  "aboutAppStory": "Staff Arts is vernoemd als eerbetoon aan “Staff” — een mixed-media kunstenaar wiens werk materialen, texturen en gevoel samenbrengt tot iets geheel eigens. Deze app is gebouwd als een liefdesbrief aan die geest.",
+  "aboutAppFooter": "Qup DA · staffarts.com"
 }

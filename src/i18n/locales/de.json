@@ -188,5 +188,16 @@
   "artworkAddDepth": "+ Tiefe hinzufügen (für 3D-Werke)",
   "artworkRemoveDepth": "− Tiefe entfernen",
   "authGateTitle": "Werden Sie Teil der Staff-Arts-Community",
-  "authGateSubtitle": "Melden Sie sich an, um Ihre Kunst zu teilen, Künstlern zu folgen und mit Sammlern in Kontakt zu treten."
+  "authGateSubtitle": "Melden Sie sich an, um Ihre Kunst zu teilen, Künstlern zu folgen und mit Sammlern in Kontakt zu treten.",
+  "tabHome": "Start",
+  "tabExplore": "Entdecken",
+  "tabShows": "Termine",
+  "tabProfile": "Profil",
+  "aboutAppTab": "Über",
+  "aboutAppTagline": "Ein Zuhause für Kunst, Künstler und Sammler.",
+  "aboutAppWhatTitle": "Was ist Staff Arts?",
+  "aboutAppWhat": "Staff Arts ist ein Marktplatz und Treffpunkt für originale Kunst. Entdecken Sie Kunstwerke, folgen Sie Künstlern, erkunden Sie Ausstellungen und Veranstaltungen und treten Sie direkt mit den Schaffenden in Kontakt.",
+  "aboutAppStoryTitle": "Die Geschichte hinter dem Namen",
+  "aboutAppStory": "Staff Arts ist eine Hommage an „Staff“ — eine Mixed-Media-Künstlerin, deren Werk Materialien, Texturen und Gefühl zu etwas ganz Eigenem verbindet. Diese App wurde als Liebesbrief an diesen Geist geschaffen.",
+  "aboutAppFooter": "Qup DA · staffarts.com"
 }

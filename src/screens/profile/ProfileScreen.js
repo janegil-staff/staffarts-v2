@@ -1,9 +1,9 @@
 // src/screens/profile/ProfileScreen.js
 //
-// Profile: avatar, name, bio, then a row of three round action buttons
-// (Messages, New artwork +, Edit). Buttons are always visible; when the
-// user is logged out, tapping any of them opens the AuthGate modal (a warm
-// "join the community" screen) instead of performing the action.
+// The 4th tab. Renders based on auth state, all WITHIN the tab (so the
+// bottom tab bar always stays visible):
+//   - Logged OUT → About-the-app content (logo, story, what the app is)
+//   - Logged IN  → the user's profile (avatar, name, bio, action buttons)
 
 import {
   View,
@@ -40,88 +40,55 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
   const navigation = useNavigation();
 
-  const isLoggedIn = !!user;
-
-  // Run an action if logged in; otherwise open the auth gate modal.
-  const guarded = (action) => () => {
-    if (isLoggedIn) action();
-    else navigation.navigate('AuthGate');
-  };
+  // Logged out → show the About-the-app content right here in the tab.
+  if (!user) {
+    return <AboutContent />;
+  }
 
   const s = makeStyles({ colors, fontSize, radius, spacing });
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <Header title={t('profileTitle') ?? 'Profile'} />
+      <Header title={t('tabProfile') ?? 'Profile'} />
 
       <ScrollView contentContainerStyle={s.scroll}>
-        {isLoggedIn ? (
-          <>
-            <View style={s.avatarWrap}>
-              {user.profileImage ? (
-                <Image source={{ uri: user.profileImage }} style={s.avatar} />
-              ) : (
-                <View
-                  style={[
-                    s.avatar,
-                    {
-                      backgroundColor: colors.surface,
-                      borderColor: colors.borderLight ?? '#eee',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    },
-                  ]}
-                >
-                  <Text style={s.avatarInitial}>{initialOf(user)}</Text>
-                </View>
-              )}
+        <View style={s.avatarWrap}>
+          {user.profileImage ? (
+            <Image source={{ uri: user.profileImage }} style={s.avatar} />
+          ) : (
+            <View
+              style={[
+                s.avatar,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.borderLight ?? '#eee',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              ]}
+            >
+              <Text style={s.avatarInitial}>{initialOf(user)}</Text>
             </View>
+          )}
+        </View>
 
-            <Text style={s.name}>{user.displayName || user.email}</Text>
+        <Text style={s.name}>{user.displayName || user.email}</Text>
 
-            {user.bio ? (
-              <Text style={s.bio}>{user.bio}</Text>
-            ) : (
-              <Text style={s.bioPlaceholder}>
-                {t('profileNoBio') ?? 'No bio yet. Tap edit to add one.'}
-              </Text>
-            )}
-          </>
+        {user.bio ? (
+          <Text style={s.bio}>{user.bio}</Text>
         ) : (
-          <>
-            {/* Logged-out: generic avatar + invitation, buttons still below */}
-            <View style={s.avatarWrap}>
-              <View
-                style={[
-                  s.avatar,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.borderLight ?? '#eee',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  },
-                ]}
-              >
-                <Text style={s.avatarInitial}>?</Text>
-              </View>
-            </View>
-            <Text style={s.name}>
-              {t('profileLoggedOutTitle') ?? 'Welcome to Staff Arts'}
-            </Text>
-            <Text style={s.bioPlaceholder}>
-              {t('profileLoggedOutBody') ??
-                'Sign in to set up your profile and share your art.'}
-            </Text>
-          </>
+          <Text style={s.bioPlaceholder}>
+            {t('profileNoBio') ?? 'No bio yet. Tap edit to add one.'}
+          </Text>
         )}
 
-        {/* ── Three round action buttons (always visible) ─────── */}
+        {/* Three round action buttons */}
         <View style={s.actionRow}>
           <ActionButton
             accessibilityLabel={t('profileMessages') ?? 'Messages'}
-            onPress={guarded(() => {
+            onPress={() => {
               // TODO: navigation.navigate('Messages') when it exists
-            })}
+            }}
             colors={colors}
           >
             <MessageCircle size={ICON_SIDE} color="#fff" strokeWidth={2} />
@@ -129,7 +96,7 @@ export default function ProfileScreen() {
 
           <ActionButton
             accessibilityLabel={t('profileNewArtwork') ?? 'New artwork'}
-            onPress={guarded(() => navigation.navigate('NewArtwork'))}
+            onPress={() => navigation.navigate('NewArtwork')}
             colors={colors}
             style={{ marginTop: MIDDLE_OFFSET }}
           >
@@ -138,12 +105,61 @@ export default function ProfileScreen() {
 
           <ActionButton
             accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
-            onPress={guarded(() => navigation.navigate('EditProfile'))}
+            onPress={() => navigation.navigate('EditProfile')}
             colors={colors}
           >
             <Pencil size={ICON_SIDE} color="#fff" strokeWidth={2} />
           </ActionButton>
         </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+// ── Logged-out About content (rendered inside the tab) ───────────────────────
+
+function AboutContent() {
+  const { colors, fontSize, spacing, radius } = useTheme();
+  const { t } = useT();
+  const a = makeAboutStyles({ colors, fontSize, spacing, radius });
+
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <Header title={t('aboutAppTab') ?? 'About'} />
+
+      <ScrollView contentContainerStyle={a.scroll}>
+        <View style={a.logoWrap}>
+          <Image
+            source={require('../../../assets/focus_logo.png')}
+            style={a.logo}
+            resizeMode="cover"
+          />
+        </View>
+
+        <Text style={a.appName}>{t('appName') ?? 'Staff Arts'}</Text>
+        <Text style={a.tagline}>
+          {t('aboutAppTagline') ?? 'A home for art, artists, and collectors.'}
+        </Text>
+
+        <Text style={a.sectionTitle}>
+          {t('aboutAppWhatTitle') ?? 'What is Staff Arts?'}
+        </Text>
+        <Text style={a.body}>
+          {t('aboutAppWhat') ??
+            'Staff Arts is a marketplace and meeting place for original art. Discover artworks, follow artists, explore exhibitions and events, and connect directly with the people behind the work.'}
+        </Text>
+
+        <Text style={a.sectionTitle}>
+          {t('aboutAppStoryTitle') ?? 'The story behind the name'}
+        </Text>
+        <Text style={a.body}>
+          {t('aboutAppStory') ??
+            'Staff Arts is named in tribute to “Staff” — a mixed-media artist whose work blends materials, textures, and feeling into something wholly her own. This app was built as a love letter to that spirit: a place where art made with heart can find the people who will treasure it.'}
+        </Text>
+
+        <Text style={a.footer}>
+          {t('aboutAppFooter') ?? 'Qup DA · staffarts.com'}
+        </Text>
       </ScrollView>
     </View>
   );
@@ -187,19 +203,10 @@ function ActionButton({
 
 const makeStyles = ({ colors, fontSize, radius, spacing }) =>
   StyleSheet.create({
-    scroll: { padding: 24, alignItems: 'center', paddingBottom: 80 },
+    scroll: { padding: 24, alignItems: 'center', paddingBottom: 100 },
     avatarWrap: { marginTop: 16, marginBottom: 16 },
-    avatar: {
-      width: 120,
-      height: 120,
-      borderRadius: 60,
-      borderWidth: 1,
-    },
-    avatarInitial: {
-      fontSize: 48,
-      fontWeight: '300',
-      color: colors.text,
-    },
+    avatar: { width: 120, height: 120, borderRadius: 60, borderWidth: 1 },
+    avatarInitial: { fontSize: 48, fontWeight: '300', color: colors.text },
     name: {
       fontSize: fontSize.xl,
       fontWeight: '700',
@@ -229,5 +236,57 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       justifyContent: 'center',
       gap: 20,
       paddingBottom: MIDDLE_OFFSET + 16,
+    },
+  });
+
+const makeAboutStyles = ({ colors, fontSize, spacing, radius }) =>
+  StyleSheet.create({
+    scroll: { padding: spacing.lg, paddingBottom: 100, alignItems: 'center' },
+    logoWrap: {
+      width: 96,
+      height: 96,
+      borderRadius: 22,
+      overflow: 'hidden',
+      marginTop: 12,
+      marginBottom: 16,
+      shadowColor: '#000',
+      shadowOpacity: 0.12,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 5,
+    },
+    logo: { width: 96, height: 96 },
+    appName: {
+      fontSize: 24,
+      fontWeight: '800',
+      color: colors.text,
+      textAlign: 'center',
+    },
+    tagline: {
+      marginTop: 6,
+      fontSize: fontSize.sm,
+      color: colors.textMuted,
+      textAlign: 'center',
+      paddingHorizontal: 16,
+    },
+    sectionTitle: {
+      alignSelf: 'stretch',
+      marginTop: 28,
+      marginBottom: 8,
+      fontSize: fontSize.md,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    body: {
+      alignSelf: 'stretch',
+      fontSize: fontSize.sm,
+      color: colors.text,
+      lineHeight: 22,
+    },
+    footer: {
+      marginTop: 32,
+      fontSize: fontSize.xs,
+      color: colors.textMuted,
+      textAlign: 'center',
     },
   });

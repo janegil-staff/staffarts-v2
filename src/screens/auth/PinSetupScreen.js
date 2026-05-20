@@ -37,7 +37,6 @@ export default function PinSetupScreen({ navigation, route }) {
   const pinRefs = useRef([]);
   const confirmRefs = useRef([]);
 
-  // Focus first box on mount and when switching stages.
   useEffect(() => {
     const t1 = setTimeout(() => {
       if (stage === 'enter') {
@@ -69,7 +68,6 @@ export default function PinSetupScreen({ navigation, route }) {
       setTimeout(() => confirmRefs.current[0]?.focus(), 50);
       return;
     }
-    // Navigate back to Register (or whoever sent us) with the new PIN.
     navigation.navigate(returnTo, { ...returnParams, pin });
   };
 
@@ -85,7 +83,6 @@ export default function PinSetupScreen({ navigation, route }) {
           contentContainerStyle={s.scroll}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Back link */}
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={s.backBtn}
@@ -110,7 +107,6 @@ export default function PinSetupScreen({ navigation, route }) {
 
           <View style={{ height: 48 }} />
 
-          {/* PIN boxes */}
           <View style={s.pinWrap}>
             <PinBoxes
               value={stage === 'enter' ? pin : confirm}
@@ -125,7 +121,6 @@ export default function PinSetupScreen({ navigation, route }) {
               refs={stage === 'enter' ? pinRefs : confirmRefs}
               colors={colors}
               fontSize={fontSize}
-              radius={radius}
               hasError={!!error}
             />
           </View>
@@ -134,7 +129,6 @@ export default function PinSetupScreen({ navigation, route }) {
 
           <View style={{ height: 48 }} />
 
-          {/* Action button */}
           <TouchableOpacity
             style={s.btn}
             onPress={stage === 'enter' ? advanceToConfirm : savePin}
@@ -167,12 +161,17 @@ export default function PinSetupScreen({ navigation, route }) {
   );
 }
 
-// ── 4-box PIN input ────────────────────────────────────────────────────────
+// ── 4-slot underline PIN input ──────────────────────────────────────────────
+//
+// Each slot is a slim transparent TextInput sitting above a thin underline.
+// A filled slot shows a dot; the active slot's underline takes the accent
+// color. No boxes, no heavy borders.
 
-const BOX_SIZE = 56; // shrunk from 72
+const SLOT_WIDTH = 44;
 
-function PinBoxes({ value, onChange, refs, colors, fontSize, radius, hasError }) {
+function PinBoxes({ value, onChange, refs, colors, fontSize, hasError }) {
   const digits = (value || '').slice(0, PIN_LENGTH).padEnd(PIN_LENGTH, '');
+  const activeIndex = Math.min((value || '').length, PIN_LENGTH - 1);
 
   const handleChange = (index, text) => {
     const cleaned = text.replace(/\D/g, '');
@@ -201,39 +200,50 @@ function PinBoxes({ value, onChange, refs, colors, fontSize, radius, hasError })
     }
   };
 
-  const borderColor = hasError ? (colors.danger ?? '#C62828') : colors.accent;
+  const lineDefault = colors.borderLight ?? '#ccc';
+  const lineActive = hasError ? (colors.danger ?? '#C62828') : colors.accent;
 
   return (
     <View style={pinStyles.row}>
       {Array.from({ length: PIN_LENGTH }).map((_, i) => {
         const filled = !!digits[i];
+        const isActive = i === activeIndex;
+        const lineColor = filled || isActive ? lineActive : lineDefault;
+
         return (
-          <TextInput
-            key={i}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
-            value={digits[i] || ''}
-            onChangeText={(text) => handleChange(i, text)}
-            onKeyPress={({ nativeEvent }) => handleKeyPress(i, nativeEvent.key)}
-            keyboardType="number-pad"
-            maxLength={PIN_LENGTH}
-            secureTextEntry
-            textContentType={Platform.OS === 'ios' ? 'oneTimeCode' : 'none'}
-            selectTextOnFocus
-            style={[
-              pinStyles.box,
-              {
-                borderColor: filled
-                  ? borderColor
-                  : (colors.borderLight ?? '#ccc'),
-                backgroundColor: colors.surface,
-                color: colors.text,
-                fontSize: fontSize.xl, // was xxl
-                borderRadius: radius.md,
-              },
-            ]}
-          />
+          <View key={i} style={pinStyles.slot}>
+            {/* The input shows the masked digit (•) via secureTextEntry */}
+            <TextInput
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              value={digits[i] || ''}
+              onChangeText={(text) => handleChange(i, text)}
+              onKeyPress={({ nativeEvent }) =>
+                handleKeyPress(i, nativeEvent.key)
+              }
+              keyboardType="number-pad"
+              maxLength={PIN_LENGTH}
+              secureTextEntry
+              textContentType={Platform.OS === 'ios' ? 'oneTimeCode' : 'none'}
+              selectTextOnFocus
+              style={[
+                pinStyles.input,
+                { color: colors.text, fontSize: fontSize.xl },
+              ]}
+            />
+
+            {/* Underline */}
+            <View
+              style={[
+                pinStyles.line,
+                {
+                  backgroundColor: lineColor,
+                  height: isActive ? 2.5 : 1.5,
+                },
+              ]}
+            />
+          </View>
         );
       })}
     </View>
@@ -243,15 +253,28 @@ function PinBoxes({ value, onChange, refs, colors, fontSize, radius, hasError })
 const pinStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 18,
     justifyContent: 'center',
   },
-  box: {
-    width: BOX_SIZE,
-    height: BOX_SIZE,
-    borderWidth: 2,
+  slot: {
+    width: SLOT_WIDTH,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    width: '100%',
+    height: 40,
     textAlign: 'center',
     fontWeight: '700',
+    paddingVertical: 0,
+  },
+  line: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderRadius: 2,
   },
 });
 
@@ -259,10 +282,7 @@ const pinStyles = StyleSheet.create({
 
 const makeStyles = ({ colors, fontSize, radius }) =>
   StyleSheet.create({
-    bg: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
+    bg: { flex: 1, backgroundColor: colors.background },
     scroll: {
       flexGrow: 1,
       paddingHorizontal: 32,
@@ -293,9 +313,7 @@ const makeStyles = ({ colors, fontSize, radius }) =>
       marginTop: 8,
       lineHeight: 20,
     },
-    pinWrap: {
-      alignItems: 'center',
-    },
+    pinWrap: { alignItems: 'center' },
     error: {
       color: colors.danger ?? '#C62828',
       fontSize: fontSize.sm,

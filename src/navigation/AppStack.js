@@ -17,6 +17,7 @@ import PersonalSettingsScreen from '../screens/settings/PersonalSettingsScreen';
 import LanguageScreen from '../screens/settings/LanguageScreen';
 import TermsScreen from '../screens/settings/TermsScreen';
 import AboutScreen from '../screens/settings/AboutScreen';
+import AboutAppScreen from '../screens/about/AboutAppScreen';
 import ChangeEmailScreen from '../screens/settings/ChangeEmailScreen';
 import DeleteAccountScreen from '../screens/settings/DeleteAccountScreen';
 import ArtworkDetailScreen from '../screens/artwork/ArtworkDetailScreen';
@@ -58,6 +59,7 @@ export default function AppStack() {
       />
 
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="AboutApp" component={AboutAppScreen} />
 
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="PersonalSettings" component={PersonalSettingsScreen} />
