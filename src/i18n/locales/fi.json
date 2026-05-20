@@ -137,5 +137,20 @@
   "deleteAccountEvents": "tapahtumaa",
   "deleteAccountExhibitions": "näyttelyä",
   "deleteAccountTracks": "raitaa",
-  "deleteAccountMessages": "viestiä"
+  "deleteAccountMessages": "viestiä",
+  "profileTitle": "Profiili",
+  "profileEdit": "Muokkaa profiilia",
+  "profileEditTitle": "Muokkaa profiilia",
+  "profileTapAvatar": "Vaihda avatar napauttamalla",
+  "profileUploading": "Ladataan…",
+  "profileBio": "Bio",
+  "profileBioPlaceholder": "Kerro itsestäsi…",
+  "profileSave": "Tallenna",
+  "profileSaveFailed": "Profiilin tallennus epäonnistui",
+  "profileNoBio": "Ei bioa vielä. Lisää napauttamalla muokkauskuvaketta.",
+  "profileLoggedOutTitle": "Tervetuloa Staff Artsiin",
+  "profileLoggedOutBody": "Kirjaudu sisään tai luo tili määrittääksesi profiilisi.",
+  "profileMessages": "Viestit",
+  "profileNewArtwork": "Uusi teos",
+  "profileAvatarUpdated": "Kuva päivitetty ✓"
 }

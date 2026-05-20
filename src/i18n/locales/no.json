@@ -137,5 +137,20 @@
   "deleteAccountEvents": "arrangementer",
   "deleteAccountExhibitions": "utstillinger",
   "deleteAccountTracks": "spor",
-  "deleteAccountMessages": "meldinger"
+  "deleteAccountMessages": "meldinger",
+  "profileTitle": "Profil",
+  "profileEdit": "Rediger profil",
+  "profileEditTitle": "Rediger profil",
+  "profileTapAvatar": "Trykk for å endre avatar",
+  "profileUploading": "Laster opp…",
+  "profileBio": "Om meg",
+  "profileBioPlaceholder": "Fortell oss om deg selv…",
+  "profileSave": "Lagre",
+  "profileSaveFailed": "Kunne ikke lagre profilen",
+  "profileNoBio": "Ingen biografi ennå. Trykk på blyantikonet for å legge til.",
+  "profileLoggedOutTitle": "Velkommen til Staff Arts",
+  "profileLoggedOutBody": "Logg inn eller opprett en konto for å sette opp profilen.",
+  "profileMessages": "Meldinger",
+  "profileNewArtwork": "Nytt kunstverk",
+  "profileAvatarUpdated": "Bilde oppdatert ✓"
 }

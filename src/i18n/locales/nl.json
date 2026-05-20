@@ -137,5 +137,20 @@
   "deleteAccountEvents": "evenementen",
   "deleteAccountExhibitions": "tentoonstellingen",
   "deleteAccountTracks": "tracks",
-  "deleteAccountMessages": "berichten"
+  "deleteAccountMessages": "berichten",
+  "profileTitle": "Profiel",
+  "profileEdit": "Profiel bewerken",
+  "profileEditTitle": "Profiel bewerken",
+  "profileTapAvatar": "Tik om avatar te wijzigen",
+  "profileUploading": "Uploaden…",
+  "profileBio": "Bio",
+  "profileBioPlaceholder": "Vertel ons over jezelf…",
+  "profileSave": "Opslaan",
+  "profileSaveFailed": "Kon profiel niet opslaan",
+  "profileNoBio": "Nog geen bio. Tik op het potloodje om een bio toe te voegen.",
+  "profileLoggedOutTitle": "Welkom bij Staff Arts",
+  "profileLoggedOutBody": "Log in of maak een account aan om je profiel in te stellen.",
+  "profileMessages": "Berichten",
+  "profileNewArtwork": "Nieuw kunstwerk",
+  "profileAvatarUpdated": "Foto bijgewerkt ✓"
 }

@@ -137,5 +137,20 @@
   "deleteAccountEvents": "events",
   "deleteAccountExhibitions": "exhibitions",
   "deleteAccountTracks": "tracks",
-  "deleteAccountMessages": "messages"
+  "deleteAccountMessages": "messages",
+  "profileTitle": "Profile",
+  "profileEdit": "Edit profile",
+  "profileEditTitle": "Edit profile",
+  "profileTapAvatar": "Tap to change avatar",
+  "profileUploading": "Uploading…",
+  "profileBio": "Bio",
+  "profileBioPlaceholder": "Tell us about yourself…",
+  "profileSave": "Save",
+  "profileSaveFailed": "Could not save profile",
+  "profileNoBio": "No bio yet. Tap the edit icon to add one.",
+  "profileLoggedOutTitle": "Welcome to Staff Arts",
+  "profileLoggedOutBody": "Log in or create an account to set up your profile.",
+  "profileMessages": "Messages",
+  "profileNewArtwork": "New artwork",
+  "profileAvatarUpdated": "Photo updated ✓"
 }

@@ -137,5 +137,20 @@
   "deleteAccountEvents": "Veranstaltungen",
   "deleteAccountExhibitions": "Ausstellungen",
   "deleteAccountTracks": "Titel",
-  "deleteAccountMessages": "Nachrichten"
+  "deleteAccountMessages": "Nachrichten",
+  "profileTitle": "Profil",
+  "profileEdit": "Profil bearbeiten",
+  "profileEditTitle": "Profil bearbeiten",
+  "profileTapAvatar": "Tippen, um Avatar zu ändern",
+  "profileUploading": "Hochladen…",
+  "profileBio": "Bio",
+  "profileBioPlaceholder": "Erzählen Sie uns von sich…",
+  "profileSave": "Speichern",
+  "profileSaveFailed": "Profil konnte nicht gespeichert werden",
+  "profileNoBio": "Noch keine Bio. Tippen Sie auf das Bearbeiten-Symbol, um eine hinzuzufügen.",
+  "profileLoggedOutTitle": "Willkommen bei Staff Arts",
+  "profileLoggedOutBody": "Melden Sie sich an oder erstellen Sie ein Konto, um Ihr Profil einzurichten.",
+  "profileMessages": "Nachrichten",
+  "profileNewArtwork": "Neues Kunstwerk",
+  "profileAvatarUpdated": "Foto aktualisiert ✓"
 }

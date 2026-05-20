@@ -137,5 +137,20 @@
   "deleteAccountEvents": "evenemang",
   "deleteAccountExhibitions": "utställningar",
   "deleteAccountTracks": "spår",
-  "deleteAccountMessages": "meddelanden"
+  "deleteAccountMessages": "meddelanden",
+  "profileTitle": "Profil",
+  "profileEdit": "Redigera profil",
+  "profileEditTitle": "Redigera profil",
+  "profileTapAvatar": "Tryck för att ändra avatar",
+  "profileUploading": "Laddar upp…",
+  "profileBio": "Bio",
+  "profileBioPlaceholder": "Berätta om dig själv…",
+  "profileSave": "Spara",
+  "profileSaveFailed": "Kunde inte spara profilen",
+  "profileNoBio": "Ingen bio ännu. Tryck på pennan för att lägga till en.",
+  "profileLoggedOutTitle": "Välkommen till Staff Arts",
+  "profileLoggedOutBody": "Logga in eller skapa ett konto för att ställa in din profil.",
+  "profileMessages": "Meddelanden",
+  "profileNewArtwork": "Nytt konstverk",
+  "profileAvatarUpdated": "Foto uppdaterat ✓"
 }

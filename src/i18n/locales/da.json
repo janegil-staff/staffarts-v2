@@ -137,5 +137,20 @@
   "deleteAccountEvents": "begivenheder",
   "deleteAccountExhibitions": "udstillinger",
   "deleteAccountTracks": "spor",
-  "deleteAccountMessages": "beskeder"
+  "deleteAccountMessages": "beskeder",
+  "profileTitle": "Profil",
+  "profileEdit": "Rediger profil",
+  "profileEditTitle": "Rediger profil",
+  "profileTapAvatar": "Tryk for at skifte avatar",
+  "profileUploading": "Uploader…",
+  "profileBio": "Bio",
+  "profileBioPlaceholder": "Fortæl os om dig selv…",
+  "profileSave": "Gem",
+  "profileSaveFailed": "Kunne ikke gemme profilen",
+  "profileNoBio": "Ingen bio endnu. Tryk på blyantsymbolet for at tilføje en.",
+  "profileLoggedOutTitle": "Velkommen til Staff Arts",
+  "profileLoggedOutBody": "Log ind eller opret en konto for at oprette din profil.",
+  "profileMessages": "Beskeder",
+  "profileNewArtwork": "Nyt kunstværk",
+  "profileAvatarUpdated": "Foto opdateret ✓"
 }
