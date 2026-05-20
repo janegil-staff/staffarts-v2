@@ -6,6 +6,9 @@
 //   - Right side: avatar (logged in) or "Log in" pill (logged out)
 //   - Left side: empty
 //
+// The logged-in avatar shows the user's profileImage when set, falling back
+// to their initial. Tapping it opens Settings.
+//
 // You can override either side with the `left` or `right` props
 // (e.g. a back button on Settings, a close button on NewArtwork).
 
@@ -13,6 +16,7 @@ import { useMemo } from 'react';
 import {
   View,
   Text,
+  Image,
   Pressable,
   StyleSheet,
 } from 'react-native';
@@ -29,8 +33,9 @@ const HEADER_FG = '#FFFFFF';
 
 function initialOf(user) {
   const first =
+    user?.displayName?.trim().charAt(0) ||
     user?.name?.trim().charAt(0) ||
-    user?.displayName?.trim().charAt(0);
+    user?.email?.trim().charAt(0);
   return first ? first.toUpperCase() : '?';
 }
 
@@ -63,7 +68,14 @@ export default function Header({ title = 'Staff Arts', left = null, right = null
         hitSlop={8}
         accessibilityLabel={t('homeOpenSettings') || 'Open settings'}
       >
-        <Text style={styles.avatarText}>{initialOf(user)}</Text>
+        {user.profileImage ? (
+          <Image
+            source={{ uri: user.profileImage }}
+            style={styles.avatarImage}
+          />
+        ) : (
+          <Text style={styles.avatarText}>{initialOf(user)}</Text>
+        )}
       </Pressable>
     ) : (
       <Pressable
@@ -107,6 +119,7 @@ export default function Header({ title = 'Staff Arts', left = null, right = null
 }
 
 const SLOT_WIDTH = 80;
+const AVATAR_SIZE = 36;
 
 function makeStyles({ fontSize, spacing }) {
   return StyleSheet.create({
@@ -134,14 +147,20 @@ function makeStyles({ fontSize, spacing }) {
       letterSpacing: 0.4,
     },
     avatarBtn: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
+      width: AVATAR_SIZE,
+      height: AVATAR_SIZE,
+      borderRadius: AVATAR_SIZE / 2,
       backgroundColor: 'rgba(255,255,255,0.15)',
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.25)',
       alignItems: 'center',
       justifyContent: 'center',
+      overflow: 'hidden', // clip the image to the circle
+    },
+    avatarImage: {
+      width: AVATAR_SIZE,
+      height: AVATAR_SIZE,
+      borderRadius: AVATAR_SIZE / 2,
     },
     avatarText: {
       color: HEADER_FG,
