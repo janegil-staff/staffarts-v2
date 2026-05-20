@@ -1,12 +1,4 @@
 // src/navigation/AppStack.js
-//
-// Top-level navigator: bottom tabs (Home / Explore / Shows / Profile) with a
-// center FAB for "New Artwork". Detail screens are pushed onto the parent
-// stack so they cover the tab bar.
-//
-// Auth screens (Login / Register / ForgotPin / PinSetup) are presented as
-// modals on top of the main app, accessible via navigation.navigate('Login')
-// from anywhere.
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -20,6 +12,11 @@ import ProfileScreen from '../screens/profile/ProfileScreen';
 
 import NewArtworkScreen from '../screens/newArtwork/NewArtworkScreen';
 import SettingsScreen from '../screens/settings/SettingsScreen';
+import PersonalSettingsScreen from '../screens/settings/PersonalSettingsScreen';
+import LanguageScreen from '../screens/settings/LanguageScreen';
+import TermsScreen from '../screens/settings/TermsScreen';
+import AboutScreen from '../screens/settings/AboutScreen';
+import ChangeEmailScreen from '../screens/settings/ChangeEmailScreen';
 import ArtworkDetailScreen from '../screens/artwork/ArtworkDetailScreen';
 import EventDetailScreen from '../screens/shows/EventDetailScreen';
 import ExhibitionDetailScreen from '../screens/shows/ExhibitionDetailScreen';
@@ -56,12 +53,18 @@ export default function AppStack() {
         component={NewArtworkScreen}
         options={{ presentation: 'modal' }}
       />
+
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="PersonalSettings" component={PersonalSettingsScreen} />
+      <Stack.Screen name="Language" component={LanguageScreen} />
+      <Stack.Screen name="ChangeEmail" component={ChangeEmailScreen} />
+      <Stack.Screen name="Terms" component={TermsScreen} />
+      <Stack.Screen name="About" component={AboutScreen} />
+
       <Stack.Screen name="ArtworkDetail" component={ArtworkDetailScreen} />
       <Stack.Screen name="EventDetail" component={EventDetailScreen} />
       <Stack.Screen name="ExhibitionDetail" component={ExhibitionDetailScreen} />
 
-      {/* AUTH_MODALS_V1 — accessible from any screen via navigation.navigate('Login') */}
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />

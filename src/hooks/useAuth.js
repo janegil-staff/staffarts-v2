@@ -1,6 +1,14 @@
+// src/hooks/useAuth.js
+//
+// PIN-based auth hook. Wraps the auth API + auth store and handles the
+// navigation flow after login/register/logout.
+
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
+import {
+  useNavigation,
+  CommonActions,
+} from '@react-navigation/native';
+
 import { useAuthStore } from '../stores/authStore';
 import { tokenStorage } from '../api/client';
 import * as authApi from '../api/auth';
@@ -10,25 +18,37 @@ export function useAuth() {
   const navigation = useNavigation();
   const setUser = useAuthStore((s) => s.setUser);
   const signOut = useAuthStore((s) => s.signOut);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  // After a successful auth: pop the entire auth modal chain back to the
+  // underlying Tabs screen, then replay any pending action the user was
+  // trying to do when they hit the wall.
+  //
+  // Why not just goBack()? Because the user may have walked
+  // Register → PinSetup → Register (returned with pin) — that's a
+  // 3-deep stack, and goBack() only pops one frame.
   const afterAuthSuccess = () => {
-    if (navigation.canGoBack()) navigation.goBack();
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Tabs' }],
+      }),
+    );
     const action = consumePendingAction();
     if (action) {
       setTimeout(action, 100);
     }
   };
 
-  const login = async ({ email, password }) => {
+  // ── login ────────────────────────────────────────────────────────────
+  const login = async ({ email, pin }) => {
     setIsSubmitting(true);
     setError(null);
     try {
       const { user, accessToken, refreshToken } = await authApi.login({
         email,
-        password,
+        pin,
       });
       await tokenStorage.setTokens(accessToken, refreshToken);
       setUser(user);
@@ -42,14 +62,16 @@ export function useAuth() {
     }
   };
 
-  const register = async ({ displayName, email, password }) => {
+  // ── register ─────────────────────────────────────────────────────────
+  const register = async ({ displayName, email, pin, language }) => {
     setIsSubmitting(true);
     setError(null);
     try {
       const { user, accessToken, refreshToken } = await authApi.register({
         displayName,
         email,
-        password,
+        pin,
+        language,
       });
       await tokenStorage.setTokens(accessToken, refreshToken);
       setUser(user);
@@ -63,17 +85,19 @@ export function useAuth() {
     }
   };
 
+  // ── logout ──────────────────────────────────────────────────────────
   const logout = async () => {
     if (__DEV__) console.log('🚪 LOGOUT STARTED');
     await authApi.logout();
     await signOut();
     if (__DEV__) console.log('🚪 LOGOUT COMPLETE');
-    // Reset stack to Welcome — clears any open screens and modals.
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Welcome' }],
-    });
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Tabs' }],
+      }),
+    );
   };
 
-  return { login, register, logout, isSubmitting, error };
+  return { login, register, logout, isSubmitting, error, setError };
 }

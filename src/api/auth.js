@@ -2,11 +2,12 @@
 
 import client, { tokenStorage } from './client';
 
-export async function register({ displayName, email, pin }) {
+export async function register({ displayName, email, pin, language }) {
   const res = await client.post('/api/auth/register', {
     displayName,
     email,
     pin,
+    language,
   });
   return res.data.data; // { user, accessToken, refreshToken }
 }

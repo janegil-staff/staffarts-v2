@@ -5,7 +5,7 @@
 //
 // Flow:
 //   1. Language dropdown
-//   2. Email + confirm email (underline fields)
+//   2. Display name + email (underline fields)
 //   3. PIN code row that navigates to dedicated PinSetup screen
 //   4. Terms checkbox + data-use consent checkbox
 //   5. Continue button → register API → auto-login
@@ -53,8 +53,8 @@ export default function RegisterScreen({ navigation, route }) {
   const { t, lang } = i18n;
   const changeLanguage = i18n.setLanguage ?? i18n.setLang ?? (() => {});
 
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
-  const [emailConfirm, setEmailConfirm] = useState('');
   const [pin, setPin] = useState('');
   const [language, setLanguage] = useState(lang || 'en');
   const [langOpen, setLangOpen] = useState(false);
@@ -68,8 +68,8 @@ export default function RegisterScreen({ navigation, route }) {
   useEffect(() => {
     const p = route?.params ?? {};
     if (p.pin) setPin(p.pin);
+    if (p.displayName !== undefined) setDisplayName(p.displayName);
     if (p.email !== undefined) setEmail(p.email);
-    if (p.emailConfirm !== undefined) setEmailConfirm(p.emailConfirm);
     if (p.language) setLanguage(p.language);
     if (p.tncAccepted !== undefined) setTncAccepted(Boolean(p.tncAccepted));
     if (p.infoAccepted !== undefined) setInfoAccepted(Boolean(p.infoAccepted));
@@ -80,16 +80,16 @@ export default function RegisterScreen({ navigation, route }) {
     tncAccepted &&
     infoAccepted &&
     pinSet &&
+    displayName.trim().length >= 2 &&
     email.trim() &&
-    emailConfirm.trim() &&
     !isSubmitting;
 
   const goToPinSetup = () =>
     navigation.navigate('PinSetup', {
       returnTo: 'Register',
       returnParams: {
+        displayName,
         email,
-        emailConfirm,
         language,
         tncAccepted,
         infoAccepted,
@@ -98,13 +98,15 @@ export default function RegisterScreen({ navigation, route }) {
 
   const submit = async () => {
     setLocalError('');
+    if (displayName.trim().length < 2) {
+      setLocalError(
+        t('authDisplayNameRequired') ?? 'Display name is required',
+      );
+      return;
+    }
     const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRx.test(email.trim())) {
       setLocalError(t('authEmailInvalid') ?? 'Email is invalid');
-      return;
-    }
-    if (email.trim().toLowerCase() !== emailConfirm.trim().toLowerCase()) {
-      setLocalError(t('authEmailMismatch') ?? 'Emails do not match');
       return;
     }
     if (!pinSet) {
@@ -122,7 +124,7 @@ export default function RegisterScreen({ navigation, route }) {
     const ok = await register({
       email: trimmedEmail,
       pin,
-      displayName: trimmedEmail.split('@')[0],
+      displayName: displayName.trim(),
     });
     if (ok) {
       await SecureStore.setItemAsync(REMEMBERED_EMAIL_KEY, trimmedEmail);
@@ -219,21 +221,21 @@ export default function RegisterScreen({ navigation, route }) {
           {/* Error */}
           {!!error && <Text style={s.error}>{error}</Text>}
 
+          {/* Display name */}
+          <UnderlineField
+            label={`${t('authDisplayName') ?? 'Display name'}*`}
+            value={displayName}
+            onChangeText={setDisplayName}
+            autoCapitalize="words"
+            colors={colors}
+            fontSize={fontSize}
+          />
+
           {/* Email */}
           <UnderlineField
             label={`${t('authEmail') ?? 'Email'}*`}
             value={email}
             onChangeText={setEmail}
-            keyboardType="email-address"
-            colors={colors}
-            fontSize={fontSize}
-          />
-
-          {/* Confirm email */}
-          <UnderlineField
-            label={`${t('authConfirmEmail') ?? 'Confirm email'}*`}
-            value={emailConfirm}
-            onChangeText={setEmailConfirm}
             keyboardType="email-address"
             colors={colors}
             fontSize={fontSize}
@@ -330,6 +332,7 @@ function UnderlineField({
   value,
   onChangeText,
   keyboardType,
+  autoCapitalize = 'none',
   colors,
   fontSize,
 }) {
@@ -355,7 +358,7 @@ function UnderlineField({
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
-        autoCapitalize="none"
+        autoCapitalize={autoCapitalize}
         autoCorrect={false}
         placeholderTextColor={colors.textMuted}
         selectionColor={colors.accent}
