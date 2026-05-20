@@ -1,34 +1,35 @@
 // src/navigation/AppStack.js
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import BottomTabBar from './BottomTabBar';
+import BottomTabBar from "./BottomTabBar";
 
-import HomeScreen from '../screens/home/HomeScreen';
-import ExploreScreen from '../screens/explore/ExploreScreen';
-import ShowsScreen from '../screens/shows/ShowsScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
-import EditProfileScreen from '../screens/profile/EditProfileScreen';
+import HomeScreen from "../screens/home/HomeScreen";
+import ExploreScreen from "../screens/explore/ExploreScreen";
+import ShowsScreen from "../screens/shows/ShowsScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import EditProfileScreen from "../screens/profile/EditProfileScreen";
 
-import NewArtworkScreen from '../screens/newArtwork/NewArtworkScreen';
-import SettingsScreen from '../screens/settings/SettingsScreen';
-import PersonalSettingsScreen from '../screens/settings/PersonalSettingsScreen';
-import LanguageScreen from '../screens/settings/LanguageScreen';
-import TermsScreen from '../screens/settings/TermsScreen';
-import AboutScreen from '../screens/settings/AboutScreen';
-import AboutAppScreen from '../screens/about/AboutAppScreen';
-import ChangeEmailScreen from '../screens/settings/ChangeEmailScreen';
-import DeleteAccountScreen from '../screens/settings/DeleteAccountScreen';
-import ArtworkDetailScreen from '../screens/artwork/ArtworkDetailScreen';
-import EventDetailScreen from '../screens/shows/EventDetailScreen';
-import ExhibitionDetailScreen from '../screens/shows/ExhibitionDetailScreen';
+import NewArtworkScreen from "../screens/newArtwork/NewArtworkScreen";
+import SettingsScreen from "../screens/settings/SettingsScreen";
+import PersonalSettingsScreen from "../screens/settings/PersonalSettingsScreen";
+import LanguageScreen from "../screens/settings/LanguageScreen";
+import TermsScreen from "../screens/settings/TermsScreen";
+import AboutScreen from "../screens/settings/AboutScreen";
+import AboutAppScreen from "../screens/about/AboutAppScreen";
+import ChangeEmailScreen from "../screens/settings/ChangeEmailScreen";
+import DeleteAccountScreen from "../screens/settings/DeleteAccountScreen";
+import ArtworkDetailScreen from "../screens/artwork/ArtworkDetailScreen";
+import EventDetailScreen from "../screens/shows/EventDetailScreen";
+import ExhibitionDetailScreen from "../screens/shows/ExhibitionDetailScreen";
+import NewEventScreen from "../screens/newEvent/NewEventScreen";
 
-import LoginScreen from '../screens/auth/LoginScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
-import ForgotPinScreen from '../screens/auth/ForgotPinScreen';
-import PinSetupScreen from '../screens/auth/PinSetupScreen';
-import AuthGateScreen from '../screens/auth/AuthGateScreen';
+import LoginScreen from "../screens/auth/LoginScreen";
+import RegisterScreen from "../screens/auth/RegisterScreen";
+import ForgotPinScreen from "../screens/auth/ForgotPinScreen";
+import PinSetupScreen from "../screens/auth/PinSetupScreen";
+import AuthGateScreen from "../screens/auth/AuthGateScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -55,14 +56,21 @@ export default function AppStack() {
       <Stack.Screen
         name="NewArtwork"
         component={NewArtworkScreen}
-        options={{ presentation: 'modal' }}
+        options={{ presentation: "modal" }}
       />
-
+      <Stack.Screen
+        name="NewEvent"
+        component={NewEventScreen}
+        options={{ presentation: "modal" }}
+      />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="AboutApp" component={AboutAppScreen} />
 
       <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="PersonalSettings" component={PersonalSettingsScreen} />
+      <Stack.Screen
+        name="PersonalSettings"
+        component={PersonalSettingsScreen}
+      />
       <Stack.Screen name="Language" component={LanguageScreen} />
       <Stack.Screen name="ChangeEmail" component={ChangeEmailScreen} />
       <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} />
@@ -71,10 +79,13 @@ export default function AppStack() {
 
       <Stack.Screen name="ArtworkDetail" component={ArtworkDetailScreen} />
       <Stack.Screen name="EventDetail" component={EventDetailScreen} />
-      <Stack.Screen name="ExhibitionDetail" component={ExhibitionDetailScreen} />
+      <Stack.Screen
+        name="ExhibitionDetail"
+        component={ExhibitionDetailScreen}
+      />
 
       {/* Auth modals */}
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="AuthGate" component={AuthGateScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
