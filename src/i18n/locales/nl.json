@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Verwijderen",
   "artworkDeleteFailed": "Kon kunstwerk niet verwijderen",
   "profileMyArtworks": "Mijn kunstwerken",
-  "profileNoArtworks": "Je hebt nog geen kunstwerken toegevoegd. Tik op + om je eerste te maken."
+  "profileNoArtworks": "Je hebt nog geen kunstwerken toegevoegd. Tik op + om je eerste te maken.",
+  "exploreTitle": "Ontdek",
+  "exploreSearchPlaceholder": "Zoek kunstwerken, kunstenaars…",
+  "exploreAll": "Alle",
+  "exploreForSale": "Te koop",
+  "exploreNoResults": "Geen kunstwerken komen overeen met je zoekopdracht.",
+  "exploreEmpty": "Nog geen kunstwerken."
 }

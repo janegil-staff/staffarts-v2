@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Elimina",
   "artworkDeleteFailed": "Impossibile eliminare l'opera",
   "profileMyArtworks": "Le mie opere",
-  "profileNoArtworks": "Non hai ancora aggiunto opere. Tocca + per creare la prima."
+  "profileNoArtworks": "Non hai ancora aggiunto opere. Tocca + per creare la prima.",
+  "exploreTitle": "Esplora",
+  "exploreSearchPlaceholder": "Cerca opere, artisti…",
+  "exploreAll": "Tutte",
+  "exploreForSale": "In vendita",
+  "exploreNoResults": "Nessuna opera corrisponde alla ricerca.",
+  "exploreEmpty": "Ancora nessuna opera."
 }

@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Delete",
   "artworkDeleteFailed": "Could not delete artwork",
   "profileMyArtworks": "My artworks",
-  "profileNoArtworks": "You haven’t added any artworks yet. Tap + to create your first."
+  "profileNoArtworks": "You haven’t added any artworks yet. Tap + to create your first.",
+  "exploreTitle": "Explore",
+  "exploreSearchPlaceholder": "Search artworks, artists…",
+  "exploreAll": "All",
+  "exploreForSale": "For sale",
+  "exploreNoResults": "No artworks match your search.",
+  "exploreEmpty": "No artworks yet."
 }

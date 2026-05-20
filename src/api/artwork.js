@@ -2,6 +2,7 @@
 
 import client from './client';
 
+// Returns just the array. Used by Home and the profile "my artworks" grid.
 export async function listArtworks({ limit, sort, artist, status } = {}) {
   const params = {};
   if (limit) params.limit = limit;
@@ -10,6 +11,27 @@ export async function listArtworks({ limit, sort, artist, status } = {}) {
   if (status) params.status = status;
   const res = await client.get('/api/artworks', { params });
   return res.data.data; // array
+}
+
+// Returns the full pagination envelope for infinite scroll / search:
+//   { data, page, limit, total, hasMore }
+export async function listArtworksPaged({
+  page = 1,
+  limit = 20,
+  sort,
+  q,
+  available,
+  status,
+  artist,
+} = {}) {
+  const params = { page, limit };
+  if (sort) params.sort = sort;
+  if (q) params.q = q;
+  if (available) params.available = 'true';
+  if (status) params.status = status;
+  if (artist) params.artist = artist;
+  const res = await client.get('/api/artworks', { params });
+  return res.data; // { success, data, page, limit, total, hasMore }
 }
 
 export async function fetchArtwork(id) {
@@ -34,5 +56,5 @@ export async function deleteArtwork(id) {
 
 export async function signArtworkUpload() {
   const res = await client.post('/api/uploads/artwork/sign');
-  return res.data.data; // { cloudName, apiKey, timestamp, folder, publicId, transformation, signature }
+  return res.data.data;
 }

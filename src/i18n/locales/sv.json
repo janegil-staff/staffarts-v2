@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Radera",
   "artworkDeleteFailed": "Kunde inte radera konstverket",
   "profileMyArtworks": "Mina konstverk",
-  "profileNoArtworks": "Du har inte lagt till några konstverk ännu. Tryck på + för att skapa ditt första."
+  "profileNoArtworks": "Du har inte lagt till några konstverk ännu. Tryck på + för att skapa ditt första.",
+  "exploreTitle": "Utforska",
+  "exploreSearchPlaceholder": "Sök konstverk, konstnärer…",
+  "exploreAll": "Alla",
+  "exploreForSale": "Till salu",
+  "exploreNoResults": "Inga konstverk matchar din sökning.",
+  "exploreEmpty": "Inga konstverk ännu."
 }

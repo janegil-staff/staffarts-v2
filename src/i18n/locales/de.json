@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Löschen",
   "artworkDeleteFailed": "Kunstwerk konnte nicht gelöscht werden",
   "profileMyArtworks": "Meine Kunstwerke",
-  "profileNoArtworks": "Sie haben noch keine Kunstwerke hinzugefügt. Tippen Sie auf +, um Ihr erstes zu erstellen."
+  "profileNoArtworks": "Sie haben noch keine Kunstwerke hinzugefügt. Tippen Sie auf +, um Ihr erstes zu erstellen.",
+  "exploreTitle": "Entdecken",
+  "exploreSearchPlaceholder": "Kunstwerke, Künstler suchen…",
+  "exploreAll": "Alle",
+  "exploreForSale": "Zu verkaufen",
+  "exploreNoResults": "Keine Kunstwerke entsprechen Ihrer Suche.",
+  "exploreEmpty": "Noch keine Kunstwerke."
 }

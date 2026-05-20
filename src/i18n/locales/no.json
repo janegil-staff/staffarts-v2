@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Slett",
   "artworkDeleteFailed": "Kunne ikke slette kunstverket",
   "profileMyArtworks": "Mine kunstverk",
-  "profileNoArtworks": "Du har ikke lagt til noen kunstverk ennå. Trykk + for å lage ditt første."
+  "profileNoArtworks": "Du har ikke lagt til noen kunstverk ennå. Trykk + for å lage ditt første.",
+  "exploreTitle": "Utforsk",
+  "exploreSearchPlaceholder": "Søk kunstverk, kunstnere…",
+  "exploreAll": "Alle",
+  "exploreForSale": "Til salgs",
+  "exploreNoResults": "Ingen kunstverk samsvarer med søket.",
+  "exploreEmpty": "Ingen kunstverk ennå."
 }

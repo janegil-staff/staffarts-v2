@@ -211,5 +211,11 @@
   "artworkDeleteConfirm": "Poista",
   "artworkDeleteFailed": "Teoksen poisto epäonnistui",
   "profileMyArtworks": "Omat teokseni",
-  "profileNoArtworks": "Et ole vielä lisännyt teoksia. Napauta + luodaksesi ensimmäisen."
+  "profileNoArtworks": "Et ole vielä lisännyt teoksia. Napauta + luodaksesi ensimmäisen.",
+  "exploreTitle": "Tutustu",
+  "exploreSearchPlaceholder": "Hae teoksia, taiteilijoita…",
+  "exploreAll": "Kaikki",
+  "exploreForSale": "Myynnissä",
+  "exploreNoResults": "Mikään teos ei vastaa hakuasi.",
+  "exploreEmpty": "Ei vielä teoksia."
 }
