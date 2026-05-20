@@ -18,7 +18,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft } from 'lucide-react-native';
 
-import HeaderIconButton from '../../components/HeaderIconButton';
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
 import { coverImageUrl, formatPrice } from '../../utils/format';
@@ -108,14 +107,20 @@ export default function ArtworkDetailScreen({ route }) {
             <View style={{ width: screenWidth, height: screenWidth, backgroundColor: colors.surface }} />
           )}
 
-          {/* Back button overlaid on the image */}
+          {/* Back button overlaid on the image — solid dark circle for
+              guaranteed visibility against any artwork. */}
           <View style={[s.backWrap, { top: spacing.lg + 24 }]}>
-            <HeaderIconButton
+            <Pressable
               onPress={() => navigation.goBack()}
               accessibilityLabel={t('navBack') ?? 'Back'}
+              hitSlop={10}
+              style={({ pressed }) => [
+                s.backBtn,
+                pressed && { opacity: 0.8 },
+              ]}
             >
-              <ChevronLeft size={22} color="#fff" strokeWidth={2} />
-            </HeaderIconButton>
+              <ChevronLeft size={24} color="#fff" strokeWidth={2.5} />
+            </Pressable>
           </View>
 
           {/* Pager dots */}
@@ -209,6 +214,19 @@ function makeStyles({ colors, spacing, fontSize, radius }) {
     backWrap: {
       position: 'absolute',
       left: spacing.lg,
+    },
+    backBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: 'rgba(0,0,0,0.55)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOpacity: 0.3,
+      shadowRadius: 6,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 5,
     },
     dots: {
       position: 'absolute',

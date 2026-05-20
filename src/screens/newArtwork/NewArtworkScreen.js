@@ -20,6 +20,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  useWindowDimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { X, Plus, ChevronLeft, ChevronRight, Star, Trash2 } from 'lucide-react-native';
@@ -304,6 +305,18 @@ export default function NewArtworkScreen() {
 // ── Step 1: Images ─────────────────────────────────────────────────────────
 
 function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, isUploading, maxImages }) {
+  // Compute a fixed square size for the 3-column grid. Using a fixed pixel
+  // size (rather than width:'30%' + aspectRatio) guarantees true squares —
+  // aspectRatio on percentage widths collapses in flex-wrap layouts.
+  const { width: screenWidth } = useWindowDimensions();
+  const GRID_PADDING = 24; // ScrollView contentContainer padding
+  const GAP = 12;
+  const COLS = 3;
+  const cellSize = Math.floor(
+    (screenWidth - GRID_PADDING * 2 - GAP * (COLS - 1)) / COLS,
+  );
+  const square = { width: cellSize, height: cellSize };
+
   return (
     <View>
       <Text style={s.stepTitle}>{t('artworkStepImages') ?? 'Images'}</Text>
@@ -314,7 +327,7 @@ function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, 
 
       <View style={s.imageGrid}>
         {images.map((uri, i) => (
-          <View key={uri} style={s.imageCell}>
+          <View key={uri} style={[s.imageCell, square]}>
             <Image source={{ uri }} style={s.imageThumb} />
             {i === 0 && (
               <View style={s.coverBadge}>
@@ -347,7 +360,11 @@ function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, 
           <Pressable
             onPress={addImage}
             disabled={isUploading}
-            style={({ pressed }) => [s.addCell, pressed && { opacity: 0.6 }]}
+            style={({ pressed }) => [
+              s.addCell,
+              square,
+              pressed && { opacity: 0.6 },
+            ]}
           >
             {isUploading ? (
               <ActivityIndicator color={colors.accent} />
@@ -629,8 +646,6 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       gap: 12,
     },
     imageCell: {
-      width: '30%',
-      aspectRatio: 1,
       borderRadius: radius.md,
       overflow: 'hidden',
       position: 'relative',
@@ -665,8 +680,6 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       justifyContent: 'center',
     },
     addCell: {
-      width: '30%',
-      aspectRatio: 1,
       borderRadius: radius.md,
       borderWidth: 1.5,
       borderStyle: 'dashed',
