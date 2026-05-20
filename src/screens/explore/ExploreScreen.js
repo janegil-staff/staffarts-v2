@@ -2,7 +2,8 @@
 //
 // Browse + search all artworks. Search matches title / medium / artist
 // name (server-side). A "For sale" chip filters to available pieces.
-// 2-column grid with infinite scroll.
+// Single-column immersive feed (Hinge/Instagram profile-scroll style):
+// big full-width image-forward cards, one per row.
 
 import { useState, useCallback, useMemo } from 'react';
 import {
@@ -19,12 +20,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Search, X } from 'lucide-react-native';
 
 import Header from '../../components/Header';
-import ExploreCard from '../../components/ExploreCard';
+import ExploreFeedCard from '../../components/ExploreFeedCard';
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
 import { useExploreArtworks } from '../../hooks/useExploreArtworks';
-
-const COLUMNS = 2;
 
 export default function ExploreScreen() {
   const { colors, fontSize, spacing, radius } = useTheme();
@@ -37,7 +36,6 @@ export default function ExploreScreen() {
 
   const {
     artworks,
-    total,
     isLoading,
     isFetchingNextPage,
     hasNextPage,
@@ -49,13 +47,11 @@ export default function ExploreScreen() {
 
   const s = makeStyles({ colors, fontSize, spacing, radius });
 
-  // Column width: screen minus horizontal padding minus inter-column gap.
+  // Card width = screen minus horizontal padding. Height a bit taller than
+  // wide for an immersive, portrait-ish feel.
   const H_PAD = spacing.lg;
-  const GAP = spacing.md;
-  const colWidth = useMemo(
-    () => Math.floor((screenWidth - H_PAD * 2 - GAP * (COLUMNS - 1)) / COLUMNS),
-    [screenWidth, H_PAD, GAP],
-  );
+  const cardWidth = useMemo(() => screenWidth - H_PAD * 2, [screenWidth, H_PAD]);
+  const cardHeight = useMemo(() => Math.round(cardWidth * 1.15), [cardWidth]);
 
   const onCardPress = useCallback(
     (artwork) => navigation.navigate('ArtworkDetail', { artwork }),
@@ -67,25 +63,19 @@ export default function ExploreScreen() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const renderItem = useCallback(
-    ({ item, index }) => (
-      <View
-        style={{
-          marginLeft: index % COLUMNS === 0 ? 0 : GAP,
-        }}
-      >
-        <ExploreCard
-          artwork={item}
-          width={colWidth}
-          onPress={() => onCardPress(item)}
-        />
-      </View>
+    ({ item }) => (
+      <ExploreFeedCard
+        artwork={item}
+        width={cardWidth}
+        height={cardHeight}
+        onPress={() => onCardPress(item)}
+      />
     ),
-    [colWidth, GAP, onCardPress],
+    [cardWidth, cardHeight, onCardPress],
   );
 
   const ListHeader = (
     <View>
-      {/* Search bar */}
       <View style={s.searchBar}>
         <Search size={18} color={colors.textMuted} strokeWidth={2} />
         <TextInput
@@ -105,22 +95,9 @@ export default function ExploreScreen() {
         )}
       </View>
 
-      {/* Filter chip row */}
       <View style={s.chipRow}>
-        <FilterChip
-          s={s}
-          colors={colors}
-          label={t('exploreAll') ?? 'All'}
-          active={!availableOnly}
-          onPress={() => setAvailableOnly(false)}
-        />
-        <FilterChip
-          s={s}
-          colors={colors}
-          label={t('exploreForSale') ?? 'For sale'}
-          active={availableOnly}
-          onPress={() => setAvailableOnly(true)}
-        />
+        <FilterChip s={s} colors={colors} label={t('exploreAll') ?? 'All'} active={!availableOnly} onPress={() => setAvailableOnly(false)} />
+        <FilterChip s={s} colors={colors} label={t('exploreForSale') ?? 'For sale'} active={availableOnly} onPress={() => setAvailableOnly(true)} />
       </View>
     </View>
   );
@@ -156,16 +133,14 @@ export default function ExploreScreen() {
           data={artworks}
           keyExtractor={(item, i) => item._id ?? String(i)}
           renderItem={renderItem}
-          numColumns={COLUMNS}
           ListHeaderComponent={ListHeader}
           ListEmptyComponent={ListEmpty}
           ListFooterComponent={ListFooter}
           onEndReached={onEndReached}
-          onEndReachedThreshold={0.4}
+          onEndReachedThreshold={0.5}
           onRefresh={refetch}
           refreshing={isRefreshing}
           contentContainerStyle={{ paddingHorizontal: H_PAD, paddingTop: spacing.md }}
-          columnWrapperStyle={{ justifyContent: 'flex-start' }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         />
@@ -178,10 +153,7 @@ function FilterChip({ s, colors, label, active, onPress }) {
   return (
     <Pressable
       onPress={onPress}
-      style={[
-        s.chip,
-        active && { backgroundColor: colors.accent, borderColor: colors.accent },
-      ]}
+      style={[s.chip, active && { backgroundColor: colors.accent, borderColor: colors.accent }]}
     >
       <Text style={[s.chipText, active && { color: '#fff' }]}>{label}</Text>
     </Pressable>
@@ -207,11 +179,7 @@ function makeStyles({ colors, fontSize, spacing, radius }) {
       fontSize: fontSize.md,
       paddingVertical: 0,
     },
-    chipRow: {
-      flexDirection: 'row',
-      gap: 8,
-      marginBottom: spacing.md,
-    },
+    chipRow: { flexDirection: 'row', gap: 8, marginBottom: spacing.md },
     chip: {
       paddingHorizontal: 16,
       paddingVertical: 8,
@@ -221,11 +189,7 @@ function makeStyles({ colors, fontSize, spacing, radius }) {
     },
     chipText: { color: colors.text, fontWeight: '600', fontSize: fontSize.sm },
     emptyWrap: { paddingVertical: 60, alignItems: 'center' },
-    emptyText: {
-      color: colors.textMuted,
-      fontSize: fontSize.sm,
-      textAlign: 'center',
-    },
+    emptyText: { color: colors.textMuted, fontSize: fontSize.sm, textAlign: 'center' },
     footerLoad: { paddingVertical: 24, alignItems: 'center' },
   });
 }
