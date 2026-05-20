@@ -199,5 +199,17 @@
   "aboutAppWhat": "O Staff Arts é um mercado e ponto de encontro para arte original. Descubra obras, siga artistas, explore exposições e eventos e ligue-se diretamente a quem cria.",
   "aboutAppStoryTitle": "A história por trás do nome",
   "aboutAppStory": "O Staff Arts presta homenagem a “Staff” — uma artista de técnica mista cuja obra funde materiais, texturas e emoção em algo totalmente seu. Esta app foi criada como uma carta de amor a esse espírito.",
-  "aboutAppFooter": "Qup DA · staffarts.com"
+  "aboutAppFooter": "Qup DA · staffarts.com",
+  "artworkEditTitle": "Editar obra",
+  "artworkSave": "Guardar",
+  "artworkSaveFailed": "Não foi possível guardar as alterações",
+  "artworkEdit": "Editar",
+  "artworkDelete": "Eliminar",
+  "artworkChangeStatus": "Alterar estado",
+  "artworkDeleteTitle": "Eliminar obra?",
+  "artworkDeleteMsg": "Isto remove permanentemente esta obra. Não pode ser desfeito.",
+  "artworkDeleteConfirm": "Eliminar",
+  "artworkDeleteFailed": "Não foi possível eliminar a obra",
+  "profileMyArtworks": "As minhas obras",
+  "profileNoArtworks": "Ainda não adicionou obras. Toque em + para criar a primeira."
 }

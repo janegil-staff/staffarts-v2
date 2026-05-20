@@ -199,5 +199,17 @@
   "aboutAppWhat": "Staff Arts on alkuperäisen taiteen markkinapaikka ja kohtaamispaikka. Löydä teoksia, seuraa taiteilijoita, tutustu näyttelyihin ja tapahtumiin ja ota suoraan yhteyttä tekijöihin.",
   "aboutAppStoryTitle": "Tarina nimen takana",
   "aboutAppStory": "Staff Arts on nimetty kunnianosoituksena “Staffille” — sekatekniikan taiteilijalle, jonka teokset yhdistävät materiaalit, tekstuurit ja tunteen aivan omaksi kokonaisuudekseen. Tämä sovellus rakennettiin rakkauskirjeenä tuolle hengelle.",
-  "aboutAppFooter": "Qup DA · staffarts.com"
+  "aboutAppFooter": "Qup DA · staffarts.com",
+  "artworkEditTitle": "Muokkaa teosta",
+  "artworkSave": "Tallenna",
+  "artworkSaveFailed": "Muutosten tallennus epäonnistui",
+  "artworkEdit": "Muokkaa",
+  "artworkDelete": "Poista",
+  "artworkChangeStatus": "Vaihda tila",
+  "artworkDeleteTitle": "Poista teos?",
+  "artworkDeleteMsg": "Tämä poistaa teoksen pysyvästi. Toimintoa ei voi peruuttaa.",
+  "artworkDeleteConfirm": "Poista",
+  "artworkDeleteFailed": "Teoksen poisto epäonnistui",
+  "profileMyArtworks": "Omat teokseni",
+  "profileNoArtworks": "Et ole vielä lisännyt teoksia. Napauta + luodaksesi ensimmäisen."
 }

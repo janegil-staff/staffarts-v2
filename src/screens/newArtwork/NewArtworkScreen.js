@@ -23,6 +23,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 import { X, Plus, ChevronLeft, ChevronRight, Star, Trash2 } from 'lucide-react-native';
 
 import HeaderIconButton from '../../components/HeaderIconButton';
@@ -35,10 +36,21 @@ const STATUSES = ['available', 'reserved', 'sold'];
 const CURRENCIES = ['NOK', 'EUR', 'USD', 'GBP', 'SEK', 'DKK'];
 const STEP_COUNT = 4;
 
-export default function NewArtworkScreen() {
+export default function NewArtworkScreen({ route }) {
   const { colors, fontSize, radius, spacing } = useTheme();
   const { t } = useT();
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
+
+  // Edit mode: a full artwork object passed in route params. When present,
+  // we prefill all fields, call PATCH instead of POST, and label the final
+  // button "Save" instead of "Publish".
+  const editing = route?.params?.artwork ?? null;
+  const editingId = editing?._id ?? null;
+
+  const initialImages = Array.isArray(editing?.images)
+    ? editing.images.map((im) => (typeof im === 'string' ? im : im?.url)).filter(Boolean)
+    : [];
 
   const {
     images,
@@ -47,23 +59,33 @@ export default function NewArtworkScreen() {
     moveToCover,
     isUploading,
     maxImages,
-  } = useArtworkImages();
+  } = useArtworkImages(initialImages);
 
   const [step, setStep] = useState(1);
 
-  // Form state
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [medium, setMedium] = useState('');
-  const [year, setYear] = useState('');
-  const [width, setWidth] = useState('');
-  const [height, setHeight] = useState('');
-  const [depth, setDepth] = useState('');
-  const [showDepth, setShowDepth] = useState(false);
-  const [unit, setUnit] = useState('cm');
-  const [price, setPrice] = useState('');
-  const [currency, setCurrency] = useState('NOK');
-  const [status, setStatus] = useState('available');
+  // Form state (prefilled from `editing` when in edit mode)
+  const [title, setTitle] = useState(editing?.title ?? '');
+  const [description, setDescription] = useState(editing?.description ?? '');
+  const [medium, setMedium] = useState(editing?.medium ?? '');
+  const [year, setYear] = useState(editing?.year ? String(editing.year) : '');
+  const [width, setWidth] = useState(
+    editing?.dimensions?.width != null ? String(editing.dimensions.width) : '',
+  );
+  const [height, setHeight] = useState(
+    editing?.dimensions?.height != null ? String(editing.dimensions.height) : '',
+  );
+  const [depth, setDepth] = useState(
+    editing?.dimensions?.depth != null ? String(editing.dimensions.depth) : '',
+  );
+  const [showDepth, setShowDepth] = useState(
+    editing?.dimensions?.depth != null && editing.dimensions.depth !== '',
+  );
+  const [unit, setUnit] = useState(editing?.dimensions?.unit ?? 'cm');
+  const [price, setPrice] = useState(
+    editing?.price != null ? String(editing.price) : '',
+  );
+  const [currency, setCurrency] = useState(editing?.currency ?? 'NOK');
+  const [status, setStatus] = useState(editing?.status ?? 'available');
 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
@@ -122,17 +144,27 @@ export default function NewArtworkScreen() {
         images,
       };
 
-      const created = await artworkApi.createArtwork(payload);
-      // Dismiss the modal. The created artwork will appear in feeds on
-      // next fetch; detail navigation can be added later.
+      const saved = editingId
+        ? await artworkApi.updateArtwork(editingId, payload)
+        : await artworkApi.createArtwork(payload);
+
+      // Invalidate cached artwork queries so the Home feed, the artist's
+      // own grid, and the detail view all refetch and reflect the change
+      // immediately instead of waiting out the staleTime.
+      queryClient.invalidateQueries({ queryKey: ['artworks'] });
+      if (editingId) {
+        queryClient.invalidateQueries({ queryKey: ['artwork', editingId] });
+      }
+
       navigation.goBack();
-      return created;
+      return saved;
     } catch (e) {
       setError(
         e?.response?.data?.error ||
-          (t('artworkPublishFailed') ?? 'Could not publish artwork'),
+          (editingId
+            ? (t('artworkSaveFailed') ?? 'Could not save changes')
+            : (t('artworkPublishFailed') ?? 'Could not publish artwork')),
       );
-      // If the server complains about something on an earlier step, surface it.
     } finally {
       setIsSaving(false);
     }
@@ -149,7 +181,9 @@ export default function NewArtworkScreen() {
           <X size={22} color="#fff" strokeWidth={2} />
         </HeaderIconButton>
         <Text style={s.headerTitle}>
-          {t('artworkNewTitle') ?? 'New artwork'}
+          {editingId
+            ? (t('artworkEditTitle') ?? 'Edit artwork')
+            : (t('artworkNewTitle') ?? 'New artwork')}
         </Text>
         <View style={{ width: 36 }} />
       </View>
@@ -291,7 +325,10 @@ export default function NewArtworkScreen() {
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <Text style={s.nextText}>
-                  {(t('artworkPublish') ?? 'Publish').toUpperCase()}
+                  {(editingId
+                    ? (t('artworkSave') ?? 'Save')
+                    : (t('artworkPublish') ?? 'Publish')
+                  ).toUpperCase()}
                 </Text>
               )}
             </Pressable>

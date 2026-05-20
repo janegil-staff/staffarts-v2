@@ -3,7 +3,8 @@
 // The 4th tab. Renders based on auth state, all WITHIN the tab (so the
 // bottom tab bar always stays visible):
 //   - Logged OUT → About-the-app content (logo, story, what the app is)
-//   - Logged IN  → the user's profile (avatar, name, bio, action buttons)
+//   - Logged IN  → the user's profile (avatar, name, bio, action buttons,
+//                  and a grid of their own artworks)
 
 import {
   View,
@@ -12,14 +13,18 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MessageCircle, Plus, Pencil } from 'lucide-react-native';
 
 import Header from '../../components/Header';
+import SectionHeader from '../../components/SectionHeader';
+import ArtworkGrid from '../../components/ArtworkGrid';
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
+import { useMyArtworks } from '../../hooks/useMyArtworks';
 
 function initialOf(user) {
   const c =
@@ -40,83 +45,116 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
   const navigation = useNavigation();
 
-  // Logged out → show the About-the-app content right here in the tab.
   if (!user) {
     return <AboutContent />;
   }
 
+  return <LoggedInProfile />;
+}
+
+// ── Logged-in profile ──────────────────────────────────────────────────────
+
+function LoggedInProfile() {
+  const { colors, fontSize, radius, spacing } = useTheme();
+  const { t } = useT();
+  const user = useAuthStore((s) => s.user);
+  const navigation = useNavigation();
+  const { artworks, isLoading } = useMyArtworks();
+
   const s = makeStyles({ colors, fontSize, radius, spacing });
+
+  const onArtworkPress = (artwork) =>
+    navigation.navigate('ArtworkDetail', { artwork });
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <Header title={t('tabProfile') ?? 'Profile'} />
 
-      <ScrollView contentContainerStyle={s.scroll}>
-        <View style={s.avatarWrap}>
-          {user.profileImage ? (
-            <Image source={{ uri: user.profileImage }} style={s.avatar} />
+      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+        <View style={s.topWrap}>
+          <View style={s.avatarWrap}>
+            {user.profileImage ? (
+              <Image source={{ uri: user.profileImage }} style={s.avatar} />
+            ) : (
+              <View
+                style={[
+                  s.avatar,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: colors.borderLight ?? '#eee',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
+              >
+                <Text style={s.avatarInitial}>{initialOf(user)}</Text>
+              </View>
+            )}
+          </View>
+
+          <Text style={s.name}>{user.displayName || user.email}</Text>
+
+          {user.bio ? (
+            <Text style={s.bio}>{user.bio}</Text>
           ) : (
-            <View
-              style={[
-                s.avatar,
-                {
-                  backgroundColor: colors.surface,
-                  borderColor: colors.borderLight ?? '#eee',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                },
-              ]}
-            >
-              <Text style={s.avatarInitial}>{initialOf(user)}</Text>
-            </View>
+            <Text style={s.bioPlaceholder}>
+              {t('profileNoBio') ?? 'No bio yet. Tap edit to add one.'}
+            </Text>
           )}
+
+          <View style={s.actionRow}>
+            <ActionButton
+              accessibilityLabel={t('profileMessages') ?? 'Messages'}
+              onPress={() => {
+                // TODO: navigation.navigate('Messages')
+              }}
+              colors={colors}
+            >
+              <MessageCircle size={ICON_SIDE} color="#fff" strokeWidth={2} />
+            </ActionButton>
+
+            <ActionButton
+              accessibilityLabel={t('profileNewArtwork') ?? 'New artwork'}
+              onPress={() => navigation.navigate('NewArtwork')}
+              colors={colors}
+              style={{ marginTop: MIDDLE_OFFSET }}
+            >
+              <Plus size={ICON_MIDDLE} color="#fff" strokeWidth={2.5} />
+            </ActionButton>
+
+            <ActionButton
+              accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
+              onPress={() => navigation.navigate('EditProfile')}
+              colors={colors}
+            >
+              <Pencil size={ICON_SIDE} color="#fff" strokeWidth={2} />
+            </ActionButton>
+          </View>
         </View>
 
-        <Text style={s.name}>{user.displayName || user.email}</Text>
+        {/* My artworks */}
+        <SectionHeader label={t('profileMyArtworks') ?? 'My artworks'} />
 
-        {user.bio ? (
-          <Text style={s.bio}>{user.bio}</Text>
+        {isLoading ? (
+          <View style={s.loadingWrap}>
+            <ActivityIndicator color={colors.accent} />
+          </View>
+        ) : artworks.length > 0 ? (
+          <ArtworkGrid artworks={artworks} onPress={onArtworkPress} />
         ) : (
-          <Text style={s.bioPlaceholder}>
-            {t('profileNoBio') ?? 'No bio yet. Tap edit to add one.'}
-          </Text>
+          <View style={s.emptyWrap}>
+            <Text style={s.emptyText}>
+              {t('profileNoArtworks') ??
+                'You haven’t added any artworks yet. Tap + to create your first.'}
+            </Text>
+          </View>
         )}
-
-        {/* Three round action buttons */}
-        <View style={s.actionRow}>
-          <ActionButton
-            accessibilityLabel={t('profileMessages') ?? 'Messages'}
-            onPress={() => {
-              // TODO: navigation.navigate('Messages') when it exists
-            }}
-            colors={colors}
-          >
-            <MessageCircle size={ICON_SIDE} color="#fff" strokeWidth={2} />
-          </ActionButton>
-
-          <ActionButton
-            accessibilityLabel={t('profileNewArtwork') ?? 'New artwork'}
-            onPress={() => navigation.navigate('NewArtwork')}
-            colors={colors}
-            style={{ marginTop: MIDDLE_OFFSET }}
-          >
-            <Plus size={ICON_MIDDLE} color="#fff" strokeWidth={2.5} />
-          </ActionButton>
-
-          <ActionButton
-            accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
-            onPress={() => navigation.navigate('EditProfile')}
-            colors={colors}
-          >
-            <Pencil size={ICON_SIDE} color="#fff" strokeWidth={2} />
-          </ActionButton>
-        </View>
       </ScrollView>
     </View>
   );
 }
 
-// ── Logged-out About content (rendered inside the tab) ───────────────────────
+// ── Logged-out About content ────────────────────────────────────────────────
 
 function AboutContent() {
   const { colors, fontSize, spacing, radius } = useTheme();
@@ -165,13 +203,7 @@ function AboutContent() {
   );
 }
 
-function ActionButton({
-  children,
-  onPress,
-  accessibilityLabel,
-  colors,
-  style,
-}) {
+function ActionButton({ children, onPress, accessibilityLabel, colors, style }) {
   return (
     <Pressable
       onPress={onPress}
@@ -203,7 +235,7 @@ function ActionButton({
 
 const makeStyles = ({ colors, fontSize, radius, spacing }) =>
   StyleSheet.create({
-    scroll: { padding: 24, alignItems: 'center', paddingBottom: 100 },
+    topWrap: { padding: 24, alignItems: 'center' },
     avatarWrap: { marginTop: 16, marginBottom: 16 },
     avatar: { width: 120, height: 120, borderRadius: 60, borderWidth: 1 },
     avatarInitial: { fontSize: 48, fontWeight: '300', color: colors.text },
@@ -235,7 +267,15 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       alignItems: 'flex-start',
       justifyContent: 'center',
       gap: 20,
-      paddingBottom: MIDDLE_OFFSET + 16,
+      paddingBottom: MIDDLE_OFFSET + 8,
+    },
+    loadingWrap: { padding: 40, alignItems: 'center' },
+    emptyWrap: { paddingHorizontal: 32, paddingVertical: 24, alignItems: 'center' },
+    emptyText: {
+      color: colors.textMuted,
+      fontSize: fontSize.sm,
+      textAlign: 'center',
+      lineHeight: 20,
     },
   });
 

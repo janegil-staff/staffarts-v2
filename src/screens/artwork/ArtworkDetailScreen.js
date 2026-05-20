@@ -13,14 +13,16 @@ import {
   Pressable,
   StyleSheet,
   useWindowDimensions,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
-import { ChevronLeft } from 'lucide-react-native';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ChevronLeft, Pencil, Trash2 } from 'lucide-react-native';
 
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
 import { coverImageUrl, formatPrice } from '../../utils/format';
+import { useAuthStore } from '../../stores/authStore';
 import * as artworkApi from '../../api/artwork';
 
 const STATUS_COLORS = {
@@ -59,6 +61,16 @@ export default function ArtworkDetailScreen({ route }) {
   const images = imagesOf(artwork);
   const [activeIdx, setActiveIdx] = useState(0);
 
+  const queryClient = useQueryClient();
+  const user = useAuthStore((sel) => sel.user);
+  const myId = user?._id || user?.id || null;
+  // The artist field may be a populated object or a raw id string.
+  const artistId =
+    (artwork.artist && (artwork.artist._id || artwork.artist.id)) ||
+    artwork.artist ||
+    null;
+  const isOwner = !!myId && !!artistId && String(myId) === String(artistId);
+
   const artistName =
     artwork.artist?.displayName ??
     artwork.artist?.name ??
@@ -80,6 +92,67 @@ export default function ArtworkDetailScreen({ route }) {
   const onScrollImages = (e) => {
     const x = e.nativeEvent.contentOffset.x;
     setActiveIdx(Math.round(x / screenWidth));
+  };
+
+  // ── Owner actions ────────────────────────────────────────────────────
+  const refreshAll = () => {
+    queryClient.invalidateQueries({ queryKey: ['artworks'] });
+    if (id) queryClient.invalidateQueries({ queryKey: ['artwork', id] });
+  };
+
+  const onEdit = () => navigation.navigate('NewArtwork', { artwork });
+
+  const onChangeStatus = () => {
+    const options = ['available', 'reserved', 'sold'];
+    Alert.alert(
+      t('artworkChangeStatus') ?? 'Change status',
+      undefined,
+      [
+        ...options.map((st) => ({
+          text: t(`artworkStatus_${st}`) ?? st,
+          onPress: async () => {
+            if (st === artwork.status) return;
+            try {
+              await artworkApi.updateArtwork(id, { status: st });
+              refreshAll();
+            } catch (e) {
+              Alert.alert(
+                t('artworkSaveFailed') ?? 'Could not save changes',
+                e?.response?.data?.error || '',
+              );
+            }
+          },
+        })),
+        { text: t('cancel') ?? 'Cancel', style: 'cancel' },
+      ],
+    );
+  };
+
+  const onDelete = () => {
+    Alert.alert(
+      t('artworkDeleteTitle') ?? 'Delete artwork?',
+      t('artworkDeleteMsg') ??
+        'This permanently removes this artwork. This cannot be undone.',
+      [
+        { text: t('cancel') ?? 'Cancel', style: 'cancel' },
+        {
+          text: t('artworkDeleteConfirm') ?? 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await artworkApi.deleteArtwork(id);
+              refreshAll();
+              navigation.goBack();
+            } catch (e) {
+              Alert.alert(
+                t('artworkDeleteFailed') ?? 'Could not delete artwork',
+                e?.response?.data?.error || '',
+              );
+            }
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -143,16 +216,55 @@ export default function ArtworkDetailScreen({ route }) {
         </View>
 
         <View style={{ padding: spacing.lg }}>
-          {/* Title + status */}
+          {/* Title + status (status pill is tappable for the owner) */}
           <View style={s.titleRow}>
             <Text style={s.title}>{artwork.title || (t('artworkTitlePlaceholder') ?? 'Untitled')}</Text>
-            <View style={s.statusPill}>
+            <Pressable
+              onPress={isOwner ? onChangeStatus : undefined}
+              style={({ pressed }) => [
+                s.statusPill,
+                isOwner && s.statusPillOwner,
+                pressed && isOwner && { opacity: 0.7 },
+              ]}
+            >
               <View style={[s.statusDot, { backgroundColor: statusColor }]} />
               <Text style={[s.statusText, { color: statusColor }]}>
                 {statusLabel}
               </Text>
-            </View>
+              {isOwner && (
+                <Text style={[s.statusCaret, { color: statusColor }]}>▾</Text>
+              )}
+            </Pressable>
           </View>
+
+          {/* Owner edit / delete actions */}
+          {isOwner && (
+            <View style={s.ownerActions}>
+              <Pressable
+                onPress={onEdit}
+                style={({ pressed }) => [s.ownerBtn, pressed && { opacity: 0.7 }]}
+              >
+                <Pencil size={16} color={colors.accent} strokeWidth={2} />
+                <Text style={[s.ownerBtnText, { color: colors.accent }]}>
+                  {t('artworkEdit') ?? 'Edit'}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={onDelete}
+                style={({ pressed }) => [
+                  s.ownerBtn,
+                  { borderColor: '#dc2626' },
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <Trash2 size={16} color="#dc2626" strokeWidth={2} />
+                <Text style={[s.ownerBtnText, { color: '#dc2626' }]}>
+                  {t('artworkDelete') ?? 'Delete'}
+                </Text>
+              </Pressable>
+            </View>
+          )}
 
           {/* Artist */}
           {!!artistName && (
@@ -260,8 +372,29 @@ function makeStyles({ colors, spacing, fontSize, radius }) {
       backgroundColor: colors.surface,
       marginTop: 4,
     },
+    statusPillOwner: {
+      borderWidth: 1,
+      borderColor: colors.borderLight ?? '#e5e5e5',
+    },
+    statusCaret: { fontSize: 10, marginLeft: -2 },
     statusDot: { width: 8, height: 8, borderRadius: 4 },
     statusText: { fontSize: fontSize.xs, fontWeight: '700' },
+    ownerActions: {
+      flexDirection: 'row',
+      gap: 12,
+      marginTop: spacing.md,
+    },
+    ownerBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingVertical: 8,
+      paddingHorizontal: 14,
+      borderRadius: 10,
+      borderWidth: 1.5,
+      borderColor: colors.accent,
+    },
+    ownerBtnText: { fontSize: fontSize.sm, fontWeight: '700' },
     artistRow: {
       flexDirection: 'row',
       alignItems: 'center',

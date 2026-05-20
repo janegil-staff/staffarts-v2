@@ -199,5 +199,17 @@
   "aboutAppWhat": "Staff Arts er en markedsplass og møteplass for original kunst. Oppdag kunstverk, følg kunstnere, utforsk utstillinger og arrangementer, og kom i direkte kontakt med menneskene bak verkene.",
   "aboutAppStoryTitle": "Historien bak navnet",
   "aboutAppStory": "Staff Arts er oppkalt til ære for «Staff» — en mixed media-kunstner hvis verk fletter sammen materialer, teksturer og følelser til noe helt eget. Denne appen ble bygget som et kjærlighetsbrev til den ånden: et sted hvor kunst laget med hjertet kan finne menneskene som vil verdsette den.",
-  "aboutAppFooter": "Qup DA · staffarts.com"
+  "aboutAppFooter": "Qup DA · staffarts.com",
+  "artworkEditTitle": "Rediger kunstverk",
+  "artworkSave": "Lagre",
+  "artworkSaveFailed": "Kunne ikke lagre endringene",
+  "artworkEdit": "Rediger",
+  "artworkDelete": "Slett",
+  "artworkChangeStatus": "Endre status",
+  "artworkDeleteTitle": "Slette kunstverk?",
+  "artworkDeleteMsg": "Dette fjerner kunstverket permanent. Kan ikke angres.",
+  "artworkDeleteConfirm": "Slett",
+  "artworkDeleteFailed": "Kunne ikke slette kunstverket",
+  "profileMyArtworks": "Mine kunstverk",
+  "profileNoArtworks": "Du har ikke lagt til noen kunstverk ennå. Trykk + for å lage ditt første."
 }

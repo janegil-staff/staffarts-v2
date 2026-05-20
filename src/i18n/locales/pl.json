@@ -199,5 +199,17 @@
   "aboutAppWhat": "Staff Arts to rynek i miejsce spotkań dla oryginalnej sztuki. Odkrywaj dzieła, śledź artystów, poznawaj wystawy i wydarzenia oraz nawiązuj bezpośredni kontakt z twórcami.",
   "aboutAppStoryTitle": "Historia kryjąca się za nazwą",
   "aboutAppStory": "Staff Arts to hołd dla „Staff” — artystki tworzącej w technice mieszanej, której prace łączą materiały, faktury i emocje w coś całkowicie własnego. Ta aplikacja powstała jako list miłosny do tego ducha.",
-  "aboutAppFooter": "Qup DA · staffarts.com"
+  "aboutAppFooter": "Qup DA · staffarts.com",
+  "artworkEditTitle": "Edytuj dzieło",
+  "artworkSave": "Zapisz",
+  "artworkSaveFailed": "Nie udało się zapisać zmian",
+  "artworkEdit": "Edytuj",
+  "artworkDelete": "Usuń",
+  "artworkChangeStatus": "Zmień status",
+  "artworkDeleteTitle": "Usunąć dzieło?",
+  "artworkDeleteMsg": "To trwale usuwa dzieło. Nie można cofnąć.",
+  "artworkDeleteConfirm": "Usuń",
+  "artworkDeleteFailed": "Nie udało się usunąć dzieła",
+  "profileMyArtworks": "Moje dzieła",
+  "profileNoArtworks": "Nie dodałeś jeszcze żadnych dzieł. Stuknij +, aby utworzyć pierwsze."
 }
