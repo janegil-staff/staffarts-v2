@@ -1,16 +1,17 @@
-// Use your Mac's LAN IP for Expo Go testing on a real phone.
-// Find it: System Settings → Network → look for "Wi-Fi" IP address.
-// Example: 192.168.1.42
-//
-// On the iOS simulator, localhost works. On a real device, localhost won't —
-// the phone needs to reach your Mac over WiFi.
-
+// src/config.js
 import { Platform } from 'react-native';
 
-// CHANGE THIS to your Mac's LAN IP
-const LAN_IP = '192.168.1.71';
+// The iOS simulator and Android emulator-via-adb can reach localhost on
+// your Mac. Real devices need your Mac's LAN IP.
+const LAN_IP = '192.168.1.116'; // update if your IP changed
 
-export const API_BASE_URL =
-  Platform.OS === 'web' || __DEV__ === false
-    ? 'http://localhost:3000'
-    : `http://${LAN_IP}:3000`;
+let baseURL;
+if (Platform.OS === 'ios') {
+  baseURL = 'http://localhost:3000';
+} else if (Platform.OS === 'android') {
+  baseURL = 'http://10.0.2.2:3000'; // Android emulator's alias for host's localhost
+} else {
+  baseURL = `http://${LAN_IP}:3000`;
+}
+
+export const API_BASE_URL = baseURL;

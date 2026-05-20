@@ -1,17 +1,32 @@
-import client, { tokenStorage } from './client';
-import * as SecureStore from 'expo-secure-store';
+// src/api/auth.js
 
-export async function register({ displayName, email, password }) {
+import client, { tokenStorage } from './client';
+
+export async function register({ displayName, email, pin }) {
   const res = await client.post('/api/auth/register', {
     displayName,
     email,
-    password,
+    pin,
   });
   return res.data.data; // { user, accessToken, refreshToken }
 }
 
-export async function login({ email, password }) {
-  const res = await client.post('/api/auth/login', { email, password });
+export async function login({ email, pin }) {
+  const res = await client.post('/api/auth/login', { email, pin });
+  return res.data.data;
+}
+
+export async function forgotPin({ email }) {
+  const res = await client.post('/api/auth/forgot-pin', { email });
+  return res.data.data;
+}
+
+export async function resetPin({ email, code, newPin }) {
+  const res = await client.post('/api/auth/reset-pin', {
+    email,
+    code,
+    newPin,
+  });
   return res.data.data;
 }
 
@@ -26,7 +41,7 @@ export async function logout() {
     await client.post(
       '/api/auth/logout',
       { refreshToken: refreshToken ?? null },
-      { timeout: 3000 }
+      { timeout: 3000 },
     );
   } catch (e) {
     if (__DEV__) console.log('Server logout skipped:', e.message);
