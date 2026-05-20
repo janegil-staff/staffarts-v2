@@ -186,5 +186,7 @@
   "artworkPublish": "Publicera",
   "artworkPublishFailed": "Kunde inte publicera konstverket",
   "artworkAddDepth": "+ Lägg till djup (för 3D-verk)",
-  "artworkRemoveDepth": "− Ta bort djup"
+  "artworkRemoveDepth": "− Ta bort djup",
+  "authGateTitle": "Gå med i Staff Arts-gemenskapen",
+  "authGateSubtitle": "Logga in för att dela din konst, följa konstnärer och få kontakt med samlare."
 }

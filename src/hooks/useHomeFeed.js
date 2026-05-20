@@ -29,30 +29,31 @@ const EVENT_TYPE_KEYS = {
 };
 
 // ── API fetchers ───────────────────────────────────────────────────────
+// NOTE: all endpoints live under /api on the server.
 
 const fetchArtworks = async () => {
-  const { data } = await client.get('/artworks', {
+  const { data } = await client.get('/api/artworks', {
     params: { limit: ARTWORKS_LIMIT, sort: '-createdAt' },
   });
   return data?.data ?? [];
 };
 
 const fetchEvents = async () => {
-  const { data } = await client.get('/events', {
+  const { data } = await client.get('/api/events', {
     params: { limit: FETCH_LIMIT_PER_KIND, sort: 'date' },
   });
   return data?.data ?? [];
 };
 
 const fetchExhibitions = async () => {
-  const { data } = await client.get('/exhibitions', {
+  const { data } = await client.get('/api/exhibitions', {
     params: { limit: FETCH_LIMIT_PER_KIND },
   });
   return data?.data ?? [];
 };
 
 const fetchTracks = async () => {
-  const { data } = await client.get('/tracks', {
+  const { data } = await client.get('/api/tracks', {
     params: { limit: FETCH_LIMIT_PER_KIND },
   });
   return data?.tracks ?? data?.data?.tracks ?? data?.data ?? [];

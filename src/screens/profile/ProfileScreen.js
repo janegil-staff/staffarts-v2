@@ -1,8 +1,9 @@
 // src/screens/profile/ProfileScreen.js
 //
-// Logged-in profile: avatar, name, bio, then a row of three round action
-// buttons (Messages, New artwork +, Edit). The middle button has a small
-// downward offset for visual interest, but stays close to inline.
+// Profile: avatar, name, bio, then a row of three round action buttons
+// (Messages, New artwork +, Edit). Buttons are always visible; when the
+// user is logged out, tapping any of them opens the AuthGate modal (a warm
+// "join the community" screen) instead of performing the action.
 
 import {
   View,
@@ -28,17 +29,24 @@ function initialOf(user) {
   return c ? c.toUpperCase() : '?';
 }
 
-// ── Layout constants ───────────────────────────────────────────────────────
 const BUTTON_SIZE = 56;
-const MIDDLE_OFFSET = 10; // px lower than the side buttons — subtle arc
-const ICON_SIDE = 18; // Messages, Edit
-const ICON_MIDDLE = 20; // "+"
+const MIDDLE_OFFSET = 10;
+const ICON_SIDE = 18;
+const ICON_MIDDLE = 20;
 
 export default function ProfileScreen() {
   const { colors, fontSize, radius, spacing } = useTheme();
   const { t } = useT();
   const user = useAuthStore((s) => s.user);
   const navigation = useNavigation();
+
+  const isLoggedIn = !!user;
+
+  // Run an action if logged in; otherwise open the auth gate modal.
+  const guarded = (action) => () => {
+    if (isLoggedIn) action();
+    else navigation.navigate('AuthGate');
+  };
 
   const s = makeStyles({ colors, fontSize, radius, spacing });
 
@@ -47,25 +55,7 @@ export default function ProfileScreen() {
       <Header title={t('profileTitle') ?? 'Profile'} />
 
       <ScrollView contentContainerStyle={s.scroll}>
-        {!user ? (
-          <View style={s.loggedOutWrap}>
-            <Text style={s.loggedOutTitle}>
-              {t('profileLoggedOutTitle') ?? 'Welcome to Staff Arts'}
-            </Text>
-            <Text style={s.loggedOutBody}>
-              {t('profileLoggedOutBody') ??
-                'Log in or create an account to set up your profile.'}
-            </Text>
-            <Pressable
-              onPress={() => navigation.navigate('Login')}
-              style={({ pressed }) => [s.cta, pressed && { opacity: 0.85 }]}
-            >
-              <Text style={s.ctaText}>
-                {(t('authLogIn') ?? 'Log in').toUpperCase()}
-              </Text>
-            </Pressable>
-          </View>
-        ) : (
+        {isLoggedIn ? (
           <>
             <View style={s.avatarWrap}>
               {user.profileImage ? (
@@ -96,54 +86,68 @@ export default function ProfileScreen() {
                 {t('profileNoBio') ?? 'No bio yet. Tap edit to add one.'}
               </Text>
             )}
-
-            {/* ── Three round action buttons (subtle arc) ──────── */}
-            <View style={s.actionRow}>
-              <ActionButton
-                accessibilityLabel={t('profileMessages') ?? 'Messages'}
-                onPress={() => {
-                  // TODO: navigate to Messages once that screen exists.
-                  // navigation.navigate('Messages');
-                }}
-                colors={colors}
+          </>
+        ) : (
+          <>
+            {/* Logged-out: generic avatar + invitation, buttons still below */}
+            <View style={s.avatarWrap}>
+              <View
+                style={[
+                  s.avatar,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: colors.borderLight ?? '#eee',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}
               >
-                <MessageCircle
-                  size={ICON_SIDE}
-                  color="#fff"
-                  strokeWidth={2}
-                />
-              </ActionButton>
-
-              {/* Middle — slight downward offset */}
-              <ActionButton
-                accessibilityLabel={t('profileNewArtwork') ?? 'New artwork'}
-                onPress={() => navigation.navigate('NewArtwork')}
-                colors={colors}
-                style={{ marginTop: MIDDLE_OFFSET }}
-              >
-                <Plus
-                  size={ICON_MIDDLE}
-                  color="#fff"
-                  strokeWidth={2.5}
-                />
-              </ActionButton>
-
-              <ActionButton
-                accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
-                onPress={() => navigation.navigate('EditProfile')}
-                colors={colors}
-              >
-                <Pencil size={ICON_SIDE} color="#fff" strokeWidth={2} />
-              </ActionButton>
+                <Text style={s.avatarInitial}>?</Text>
+              </View>
             </View>
+            <Text style={s.name}>
+              {t('profileLoggedOutTitle') ?? 'Welcome to Staff Arts'}
+            </Text>
+            <Text style={s.bioPlaceholder}>
+              {t('profileLoggedOutBody') ??
+                'Sign in to set up your profile and share your art.'}
+            </Text>
           </>
         )}
+
+        {/* ── Three round action buttons (always visible) ─────── */}
+        <View style={s.actionRow}>
+          <ActionButton
+            accessibilityLabel={t('profileMessages') ?? 'Messages'}
+            onPress={guarded(() => {
+              // TODO: navigation.navigate('Messages') when it exists
+            })}
+            colors={colors}
+          >
+            <MessageCircle size={ICON_SIDE} color="#fff" strokeWidth={2} />
+          </ActionButton>
+
+          <ActionButton
+            accessibilityLabel={t('profileNewArtwork') ?? 'New artwork'}
+            onPress={guarded(() => navigation.navigate('NewArtwork'))}
+            colors={colors}
+            style={{ marginTop: MIDDLE_OFFSET }}
+          >
+            <Plus size={ICON_MIDDLE} color="#fff" strokeWidth={2.5} />
+          </ActionButton>
+
+          <ActionButton
+            accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
+            onPress={guarded(() => navigation.navigate('EditProfile'))}
+            colors={colors}
+          >
+            <Pencil size={ICON_SIDE} color="#fff" strokeWidth={2} />
+          </ActionButton>
+        </View>
       </ScrollView>
     </View>
   );
 }
-
-// ── Reusable round filled button ───────────────────────────────────────────
 
 function ActionButton({
   children,
@@ -183,11 +187,7 @@ function ActionButton({
 
 const makeStyles = ({ colors, fontSize, radius, spacing }) =>
   StyleSheet.create({
-    scroll: {
-      padding: 24,
-      alignItems: 'center',
-      paddingBottom: 80,
-    },
+    scroll: { padding: 24, alignItems: 'center', paddingBottom: 80 },
     avatarWrap: { marginTop: 16, marginBottom: 16 },
     avatar: {
       width: 120,
@@ -220,6 +220,7 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       color: colors.textMuted,
       fontStyle: 'italic',
       textAlign: 'center',
+      paddingHorizontal: 16,
     },
     actionRow: {
       marginTop: 32,
@@ -228,38 +229,5 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       justifyContent: 'center',
       gap: 20,
       paddingBottom: MIDDLE_OFFSET + 16,
-    },
-    loggedOutWrap: {
-      alignItems: 'center',
-      paddingTop: 48,
-      paddingHorizontal: 16,
-    },
-    loggedOutTitle: {
-      fontSize: fontSize.lg,
-      fontWeight: '700',
-      color: colors.text,
-      textAlign: 'center',
-    },
-    loggedOutBody: {
-      marginTop: 12,
-      fontSize: fontSize.sm,
-      color: colors.textMuted,
-      textAlign: 'center',
-      lineHeight: 20,
-    },
-    cta: {
-      marginTop: 28,
-      paddingHorizontal: 40,
-      height: 54,
-      backgroundColor: colors.accent,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    ctaText: {
-      color: '#fff',
-      fontSize: fontSize.md,
-      fontWeight: '800',
-      letterSpacing: 2,
     },
   });

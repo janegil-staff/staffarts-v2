@@ -186,5 +186,7 @@
   "artworkPublish": "Veröffentlichen",
   "artworkPublishFailed": "Kunstwerk konnte nicht veröffentlicht werden",
   "artworkAddDepth": "+ Tiefe hinzufügen (für 3D-Werke)",
-  "artworkRemoveDepth": "− Tiefe entfernen"
+  "artworkRemoveDepth": "− Tiefe entfernen",
+  "authGateTitle": "Werden Sie Teil der Staff-Arts-Community",
+  "authGateSubtitle": "Melden Sie sich an, um Ihre Kunst zu teilen, Künstlern zu folgen und mit Sammlern in Kontakt zu treten."
 }

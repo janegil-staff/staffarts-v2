@@ -27,6 +27,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ForgotPinScreen from '../screens/auth/ForgotPinScreen';
 import PinSetupScreen from '../screens/auth/PinSetupScreen';
+import AuthGateScreen from '../screens/auth/AuthGateScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -70,7 +71,9 @@ export default function AppStack() {
       <Stack.Screen name="EventDetail" component={EventDetailScreen} />
       <Stack.Screen name="ExhibitionDetail" component={ExhibitionDetailScreen} />
 
+      {/* Auth modals */}
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="AuthGate" component={AuthGateScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPin" component={ForgotPinScreen} />

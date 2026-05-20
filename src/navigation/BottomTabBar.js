@@ -2,14 +2,16 @@
 //
 // Custom bottom tab bar for Staff Arts 2.
 // Layout: [Tab1] [Tab2] [ FAB ] [Tab3] [Tab4]
-// The FAB is overlaid over the tab bar with elevation/shadow, navigates to
-// the NewArtwork screen.
+// The FAB is overlaid over the tab bar with elevation/shadow. When logged
+// in it opens the NewArtwork wizard; when logged out it opens the AuthGate
+// modal (a warm "join the community" screen) instead.
 
 import React from "react";
 import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Home, Compass, Calendar, User, Plus } from "lucide-react-native";
 import { useTheme } from "../theme/ThemeContext";
+import { useAuthStore } from "../stores/authStore";
 
 const NAVY = "#2D4A6E";
 
@@ -23,6 +25,8 @@ const TAB_ITEMS = [
 export default function BottomTabBar({ state, descriptors, navigation }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const user = useAuthStore((s) => s.user);
+  const isLoggedIn = !!user;
 
   const renderTab = (item) => {
     const route = state.routes.find((r) => r.name === item.key);
@@ -78,7 +82,13 @@ export default function BottomTabBar({ state, descriptors, navigation }) {
   const rightTabs = TAB_ITEMS.filter((t) => t.side === "right");
 
   const onFabPress = () => {
-    navigation.navigate("NewArtwork");
+    // Logged in → open the create-artwork wizard.
+    // Logged out → open the warm auth gate first.
+    if (isLoggedIn) {
+      navigation.navigate("NewArtwork");
+    } else {
+      navigation.navigate("AuthGate");
+    }
   };
 
   return (

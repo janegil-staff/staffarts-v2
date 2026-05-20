@@ -186,5 +186,7 @@
   "artworkPublish": "Publiceren",
   "artworkPublishFailed": "Kon kunstwerk niet publiceren",
   "artworkAddDepth": "+ Diepte toevoegen (voor 3D-werk)",
-  "artworkRemoveDepth": "− Diepte verwijderen"
+  "artworkRemoveDepth": "− Diepte verwijderen",
+  "authGateTitle": "Word lid van de Staff Arts-community",
+  "authGateSubtitle": "Log in om je kunst te delen, kunstenaars te volgen en in contact te komen met verzamelaars."
 }

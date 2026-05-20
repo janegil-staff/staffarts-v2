@@ -186,5 +186,7 @@
   "artworkPublish": "Julkaise",
   "artworkPublishFailed": "Teoksen julkaisu epäonnistui",
   "artworkAddDepth": "+ Lisää syvyys (3D-teoksille)",
-  "artworkRemoveDepth": "− Poista syvyys"
+  "artworkRemoveDepth": "− Poista syvyys",
+  "authGateTitle": "Liity Staff Arts -yhteisöön",
+  "authGateSubtitle": "Kirjaudu sisään jakaaksesi taidettasi, seurataksesi taiteilijoita ja ollaksesi yhteydessä keräilijöihin."
 }

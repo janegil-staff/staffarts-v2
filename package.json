@@ -19,6 +19,7 @@
     "dotenv": "^17.4.2",
     "expo": "~55.0.24",
     "expo-image-picker": "~55.0.20",
+    "expo-linear-gradient": "~55.0.14",
     "expo-local-authentication": "^55.0.14",
     "expo-localization": "~55.0.15",
     "expo-secure-store": "~55.0.14",
