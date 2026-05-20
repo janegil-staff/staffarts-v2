@@ -1,4 +1,6 @@
 // src/navigation/AppStack.js
+//
+// Adds DeleteAccount route to the existing stack.
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -17,6 +19,7 @@ import LanguageScreen from '../screens/settings/LanguageScreen';
 import TermsScreen from '../screens/settings/TermsScreen';
 import AboutScreen from '../screens/settings/AboutScreen';
 import ChangeEmailScreen from '../screens/settings/ChangeEmailScreen';
+import DeleteAccountScreen from '../screens/settings/DeleteAccountScreen';
 import ArtworkDetailScreen from '../screens/artwork/ArtworkDetailScreen';
 import EventDetailScreen from '../screens/shows/EventDetailScreen';
 import ExhibitionDetailScreen from '../screens/shows/ExhibitionDetailScreen';
@@ -58,6 +61,7 @@ export default function AppStack() {
       <Stack.Screen name="PersonalSettings" component={PersonalSettingsScreen} />
       <Stack.Screen name="Language" component={LanguageScreen} />
       <Stack.Screen name="ChangeEmail" component={ChangeEmailScreen} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} />
       <Stack.Screen name="Terms" component={TermsScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
 

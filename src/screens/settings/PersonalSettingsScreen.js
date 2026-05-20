@@ -1,16 +1,19 @@
 // src/screens/settings/PersonalSettingsScreen.js
 //
-// Currently just a theme toggle (Light ↔ Dark). Display name + avatar
-// editing will land here later.
+// Theme toggle + (only for logged-in users) a destructive "Delete account"
+// button at the bottom that opens the dedicated DeleteAccountScreen.
 
 import { View, Text, Pressable, ScrollView, Switch, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ChevronLeft, Sun, Moon } from 'lucide-react-native';
+import { ChevronLeft, Sun, Moon, Trash2 } from 'lucide-react-native';
 
 import Header from '../../components/Header';
 import HeaderIconButton from '../../components/HeaderIconButton';
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
+import { useAuthStore } from '../../stores/authStore';
+
+const DANGER = '#dc2626';
 
 export default function PersonalSettingsScreen() {
   const theme = useTheme();
@@ -25,6 +28,7 @@ export default function PersonalSettingsScreen() {
 
   const { t } = useT();
   const navigation = useNavigation();
+  const user = useAuthStore((s) => s.user);
 
   const s = makeStyles({ colors, fontSize, radius });
 
@@ -44,6 +48,7 @@ export default function PersonalSettingsScreen() {
       />
 
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 80 }}>
+        {/* ── Theme ───────────────────────────────────────────────── */}
         <Text style={s.sectionLabel}>{t('settingsTheme') ?? 'Theme'}</Text>
 
         <View style={s.toggleRow}>
@@ -86,6 +91,35 @@ export default function PersonalSettingsScreen() {
           {t('personalSettingsComingSoon') ??
             'Display name and avatar editing coming soon.'}
         </Text>
+
+        {/* ── Delete account (only when logged in) ──────────────── */}
+        {user && (
+          <>
+            <View style={{ height: 40 }} />
+            <View style={s.dangerDivider} />
+            <Text style={s.dangerSectionLabel}>
+              {t('dangerZone') ?? 'Danger zone'}
+            </Text>
+
+            <Pressable
+              onPress={() => navigation.navigate('DeleteAccount')}
+              style={({ pressed }) => [
+                s.deleteBtn,
+                pressed && { opacity: 0.85 },
+              ]}
+            >
+              <Trash2 size={18} color={DANGER} strokeWidth={2} />
+              <Text style={s.deleteBtnText}>
+                {t('deleteAccountButton') ?? 'Delete account'}
+              </Text>
+            </Pressable>
+
+            <Text style={s.deleteHint}>
+              {t('deleteAccountHint') ??
+                'Permanently removes your account and all content you have created.'}
+            </Text>
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -133,5 +167,42 @@ const makeStyles = ({ colors, fontSize, radius }) =>
       marginTop: 40,
       textAlign: 'center',
       lineHeight: 20,
+    },
+    dangerDivider: {
+      height: 1,
+      backgroundColor: colors.borderLight ?? '#eee',
+      marginBottom: 20,
+    },
+    dangerSectionLabel: {
+      color: DANGER,
+      fontSize: fontSize.sm,
+      fontWeight: '700',
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+      marginBottom: 12,
+    },
+    deleteBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      paddingVertical: 14,
+      paddingHorizontal: 16,
+      borderRadius: radius.md,
+      borderWidth: 1.5,
+      borderColor: DANGER,
+      backgroundColor: 'transparent',
+    },
+    deleteBtnText: {
+      color: DANGER,
+      fontSize: fontSize.md,
+      fontWeight: '700',
+    },
+    deleteHint: {
+      color: colors.textMuted,
+      fontSize: fontSize.xs,
+      marginTop: 10,
+      lineHeight: 18,
+      textAlign: 'center',
     },
   });
