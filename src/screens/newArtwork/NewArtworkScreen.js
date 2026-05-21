@@ -22,6 +22,7 @@ import {
   ActivityIndicator,
   useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -48,6 +49,7 @@ export default function NewArtworkScreen({ route }) {
   const { t } = useT();
   const navigation = useNavigation();
   const queryClient = useQueryClient();
+  const insets = useSafeAreaInsets();
 
   // Edit mode: a full artwork object passed in route params. When present,
   // we prefill all fields, call PATCH instead of POST, and label the final
@@ -296,8 +298,9 @@ export default function NewArtworkScreen({ route }) {
           {!!error && <Text style={s.error}>{error}</Text>}
         </ScrollView>
 
-        {/* Footer nav */}
-        <View style={s.footer}>
+        {/* Footer nav — paddingBottom includes the device safe-area inset so
+            the Next/Back buttons clear the iOS gesture bar / Android nav bar. */}
+        <View style={[s.footer, { paddingBottom: 16 + insets.bottom }]}>
           <Pressable
             onPress={back}
             style={({ pressed }) => [s.backBtn, pressed && { opacity: 0.6 }]}

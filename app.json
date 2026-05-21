@@ -15,6 +15,7 @@
       "supportsTablet": true
     },
     "android": {
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -27,8 +28,7 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-localization",
-      "@react-native-community/datetimepicker"
+      "expo-localization"
     ]
   }
 }

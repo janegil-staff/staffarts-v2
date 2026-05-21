@@ -5,7 +5,9 @@ import { Platform } from 'react-native';
 // your Mac. Real devices need your Mac's LAN IP.
 const LAN_IP = '192.168.1.116'; // update if your IP changed
 
-let baseURL;
+let baseURL = "https://staff-arts-v2-y3c8h.ondigitalocean.app";
+
+/*
 if (Platform.OS === 'ios') {
   baseURL = 'http://localhost:3000';
 } else if (Platform.OS === 'android') {
@@ -13,5 +15,5 @@ if (Platform.OS === 'ios') {
 } else {
   baseURL = `http://${LAN_IP}:3000`;
 }
-
+*/
 export const API_BASE_URL = baseURL;

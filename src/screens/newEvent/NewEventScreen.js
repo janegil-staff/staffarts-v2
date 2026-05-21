@@ -24,6 +24,7 @@ import {
   Modal,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQueryClient } from '@tanstack/react-query';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { X, ImagePlus, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react-native';
@@ -52,6 +53,7 @@ export default function NewEventScreen({ route }) {
   const { t, lang } = useT();
   const navigation = useNavigation();
   const queryClient = useQueryClient();
+  const insets = useSafeAreaInsets();
 
   const editing = route?.params?.event ?? null;
   const editingId = editing?._id ?? null;
@@ -222,7 +224,7 @@ export default function NewEventScreen({ route }) {
                 value={title}
                 onChangeText={setTitle}
                 placeholder={t('eventTitlePlaceholder') ?? 'Spring group show'}
-               placeholderTextColor="#C4BFB8"
+                placeholderTextColor="#C4BFB8"
                 selectionColor={colors.accent}
               />
               <View style={s.underline} />
@@ -445,7 +447,10 @@ export default function NewEventScreen({ route }) {
           {!!error && <Text style={s.error}>{error}</Text>}
         </ScrollView>
 
-        <View style={s.footer}>
+        {/* Footer — bottom padding includes the safe-area inset so the Back/Next
+            buttons clear the Android system navigation bar (and the iOS home
+            indicator). insets.bottom is 0 on devices without a system bar. */}
+        <View style={[s.footer, { paddingBottom: insets.bottom + 16 }]}>
           <Pressable onPress={back} style={({ pressed }) => [s.backBtn, pressed && { opacity: 0.6 }]}>
             <ChevronLeft size={18} color={colors.text} strokeWidth={2} />
             <Text style={s.backText}>{step === 1 ? (t('cancel') ?? 'Cancel') : (t('back') ?? 'Back')}</Text>
