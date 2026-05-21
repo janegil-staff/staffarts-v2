@@ -222,7 +222,7 @@ export default function NewEventScreen({ route }) {
                 value={title}
                 onChangeText={setTitle}
                 placeholder={t('eventTitlePlaceholder') ?? 'Spring group show'}
-                placeholderTextColor={colors.textMuted}
+               placeholderTextColor="#C4BFB8"
                 selectionColor={colors.accent}
               />
               <View style={s.underline} />
@@ -248,7 +248,7 @@ export default function NewEventScreen({ route }) {
                 value={description}
                 onChangeText={setDescription}
                 placeholder={t('eventDescriptionPlaceholder') ?? 'What’s happening…'}
-                placeholderTextColor={colors.textMuted}
+                placeholderTextColor="#C4BFB8"
                 multiline
                 textAlignVertical="top"
                 selectionColor={colors.accent}
@@ -369,7 +369,7 @@ export default function NewEventScreen({ route }) {
                 value={location}
                 onChangeText={setLocation}
                 placeholder={t('eventLocationPlaceholder') ?? 'Venue, city'}
-                placeholderTextColor={colors.textMuted}
+                placeholderTextColor="#C4BFB8"
                 selectionColor={colors.accent}
               />
               <View style={s.underline} />
@@ -392,7 +392,7 @@ export default function NewEventScreen({ route }) {
                     value={ticketPrice}
                     onChangeText={setTicketPrice}
                     placeholder="0"
-                    placeholderTextColor={colors.textMuted}
+                    placeholderTextColor="#C4BFB8"
                     keyboardType="decimal-pad"
                     selectionColor={colors.accent}
                   />
