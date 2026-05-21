@@ -29,6 +29,7 @@ import {
   Image,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -73,6 +74,20 @@ export default function MessageThreadScreen({ route }) {
 
   const [draft, setDraft] = useState('');
   const [modVisible, setModVisible] = useState(false);
+  // iOS-only: when the keyboard is open it covers the home indicator, so the
+  // composer's big bottom padding becomes a dead gap above the keyboard. Track
+  // visibility (iOS only — Android uses native "pan" and must NOT be touched,
+  // or the window mis-settles on hide) and shrink the padding while open.
+  const [kbOpen, setKbOpen] = useState(false);
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return undefined;
+    const show = Keyboard.addListener('keyboardWillShow', () => setKbOpen(true));
+    const hide = Keyboard.addListener('keyboardWillHide', () => setKbOpen(false));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
   // Once we attach the artwork to the first message, don't attach it again.
   const artworkAttachedRef = useRef(false);
 
@@ -263,8 +278,9 @@ export default function MessageThreadScreen({ route }) {
           />
         )}
 
-        {/* Composer */}
-        <View style={[s.composer, { paddingBottom: insets.bottom + 20 }]}>
+        {/* Composer. kbOpen is iOS-only; on Android it stays false so the full
+            bottom padding remains and native "pan" handles the lift. */}
+        <View style={[s.composer, { paddingBottom: kbOpen ? 8 : insets.bottom + 20 }]}>
           <TextInput
             style={s.input}
             value={draft}
