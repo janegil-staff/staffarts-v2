@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Du",
   "messagesUnknownUser": "Ukjent",
   "messagesAboutArtwork": "Om dette verket",
-  "artworkMessageArtist": "Send melding til kunstner"
+  "artworkMessageArtist": "Send melding til kunstner",
+  "modOptions": "Valg",
+  "modReportUser": "Rapporter bruker",
+  "modReportMessage": "Rapporter denne meldingen",
+  "modBlockUser": "Blokker bruker",
+  "modReportReasonTitle": "Hvorfor rapporterer du?",
+  "modBlockConfirmTitle": "Blokkere bruker?",
+  "modBlockConfirmBody": "Du vil ikke lenger se meldinger fra {name}, og de kan ikke sende deg meldinger.",
+  "modReason_spam": "Søppelpost",
+  "modReason_harassment": "Trakassering",
+  "modReason_inappropriate": "Upassende innhold",
+  "modReason_scam": "Svindel",
+  "modReason_impersonation": "Utgir seg for å være en annen",
+  "modReason_other": "Annet"
 }

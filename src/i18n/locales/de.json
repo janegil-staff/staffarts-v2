@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Du",
   "messagesUnknownUser": "Unbekannt",
   "messagesAboutArtwork": "Über dieses Werk",
-  "artworkMessageArtist": "Künstler kontaktieren"
+  "artworkMessageArtist": "Künstler kontaktieren",
+  "modOptions": "Optionen",
+  "modReportUser": "Nutzer melden",
+  "modReportMessage": "Diese Nachricht melden",
+  "modBlockUser": "Nutzer blockieren",
+  "modReportReasonTitle": "Warum meldest du das?",
+  "modBlockConfirmTitle": "Nutzer blockieren?",
+  "modBlockConfirmBody": "Du siehst keine Nachrichten mehr von {name}, und diese Person kann dir nicht mehr schreiben.",
+  "modReason_spam": "Spam",
+  "modReason_harassment": "Belästigung",
+  "modReason_inappropriate": "Unangemessener Inhalt",
+  "modReason_scam": "Betrug",
+  "modReason_impersonation": "Identitätsdiebstahl",
+  "modReason_other": "Sonstiges"
 }

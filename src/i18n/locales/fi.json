@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Sinä",
   "messagesUnknownUser": "Tuntematon",
   "messagesAboutArtwork": "Tästä teoksesta",
-  "artworkMessageArtist": "Viesti taiteilijalle"
+  "artworkMessageArtist": "Viesti taiteilijalle",
+  "modOptions": "Asetukset",
+  "modReportUser": "Ilmoita käyttäjästä",
+  "modReportMessage": "Ilmoita tästä viestistä",
+  "modBlockUser": "Estä käyttäjä",
+  "modReportReasonTitle": "Miksi teet ilmoituksen?",
+  "modBlockConfirmTitle": "Estetäänkö käyttäjä?",
+  "modBlockConfirmBody": "Et näe enää viestejä käyttäjältä {name}, eikä hän voi lähettää sinulle viestejä.",
+  "modReason_spam": "Roskaposti",
+  "modReason_harassment": "Häirintä",
+  "modReason_inappropriate": "Sopimaton sisältö",
+  "modReason_scam": "Huijaus",
+  "modReason_impersonation": "Toisena esiintyminen",
+  "modReason_other": "Muu"
 }

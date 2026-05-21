@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Du",
   "messagesUnknownUser": "Okänd",
   "messagesAboutArtwork": "Om detta verk",
-  "artworkMessageArtist": "Meddela konstnär"
+  "artworkMessageArtist": "Meddela konstnär",
+  "modOptions": "Alternativ",
+  "modReportUser": "Anmäl användare",
+  "modReportMessage": "Anmäl detta meddelande",
+  "modBlockUser": "Blockera användare",
+  "modReportReasonTitle": "Varför anmäler du?",
+  "modBlockConfirmTitle": "Blockera användare?",
+  "modBlockConfirmBody": "Du kommer inte längre att se meddelanden från {name}, och de kan inte skicka meddelanden till dig.",
+  "modReason_spam": "Skräppost",
+  "modReason_harassment": "Trakasserier",
+  "modReason_inappropriate": "Olämpligt innehåll",
+  "modReason_scam": "Bedrägeri",
+  "modReason_impersonation": "Identitetsstöld",
+  "modReason_other": "Annat"
 }

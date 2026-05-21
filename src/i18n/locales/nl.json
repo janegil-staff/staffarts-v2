@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Jij",
   "messagesUnknownUser": "Onbekend",
   "messagesAboutArtwork": "Over dit kunstwerk",
-  "artworkMessageArtist": "Bericht kunstenaar"
+  "artworkMessageArtist": "Bericht kunstenaar",
+  "modOptions": "Opties",
+  "modReportUser": "Gebruiker rapporteren",
+  "modReportMessage": "Dit bericht rapporteren",
+  "modBlockUser": "Gebruiker blokkeren",
+  "modReportReasonTitle": "Waarom rapporteer je dit?",
+  "modBlockConfirmTitle": "Gebruiker blokkeren?",
+  "modBlockConfirmBody": "Je ziet geen berichten meer van {name}, en zij kunnen jou geen berichten sturen.",
+  "modReason_spam": "Spam",
+  "modReason_harassment": "Intimidatie",
+  "modReason_inappropriate": "Ongepaste inhoud",
+  "modReason_scam": "Oplichting",
+  "modReason_impersonation": "Identiteitsfraude",
+  "modReason_other": "Anders"
 }

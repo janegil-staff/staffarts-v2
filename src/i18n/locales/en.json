@@ -274,5 +274,18 @@
   "messagesYouPrefix": "You",
   "messagesUnknownUser": "Unknown",
   "messagesAboutArtwork": "About this artwork",
-  "artworkMessageArtist": "Message artist"
+  "artworkMessageArtist": "Message artist",
+  "modOptions": "Options",
+  "modReportUser": "Report user",
+  "modReportMessage": "Report this message",
+  "modBlockUser": "Block user",
+  "modReportReasonTitle": "Why are you reporting?",
+  "modBlockConfirmTitle": "Block user?",
+  "modBlockConfirmBody": "You will no longer see messages from {name}, and they cannot message you.",
+  "modReason_spam": "Spam",
+  "modReason_harassment": "Harassment",
+  "modReason_inappropriate": "Inappropriate content",
+  "modReason_scam": "Scam",
+  "modReason_impersonation": "Impersonation",
+  "modReason_other": "Other"
 }

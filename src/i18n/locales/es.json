@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Tú",
   "messagesUnknownUser": "Desconocido",
   "messagesAboutArtwork": "Sobre esta obra",
-  "artworkMessageArtist": "Mensaje al artista"
+  "artworkMessageArtist": "Mensaje al artista",
+  "modOptions": "Opciones",
+  "modReportUser": "Denunciar usuario",
+  "modReportMessage": "Denunciar este mensaje",
+  "modBlockUser": "Bloquear usuario",
+  "modReportReasonTitle": "¿Por qué lo denuncias?",
+  "modBlockConfirmTitle": "¿Bloquear usuario?",
+  "modBlockConfirmBody": "Ya no verás los mensajes de {name}, y no podrá enviarte mensajes.",
+  "modReason_spam": "Spam",
+  "modReason_harassment": "Acoso",
+  "modReason_inappropriate": "Contenido inapropiado",
+  "modReason_scam": "Estafa",
+  "modReason_impersonation": "Suplantación de identidad",
+  "modReason_other": "Otro"
 }

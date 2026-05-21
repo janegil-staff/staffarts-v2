@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Tu",
   "messagesUnknownUser": "Sconosciuto",
   "messagesAboutArtwork": "Su quest'opera",
-  "artworkMessageArtist": "Contatta l'artista"
+  "artworkMessageArtist": "Contatta l'artista",
+  "modOptions": "Opzioni",
+  "modReportUser": "Segnala utente",
+  "modReportMessage": "Segnala questo messaggio",
+  "modBlockUser": "Blocca utente",
+  "modReportReasonTitle": "Perché stai segnalando?",
+  "modBlockConfirmTitle": "Bloccare l’utente?",
+  "modBlockConfirmBody": "Non vedrai più i messaggi di {name} e questa persona non potrà più scriverti.",
+  "modReason_spam": "Spam",
+  "modReason_harassment": "Molestie",
+  "modReason_inappropriate": "Contenuto inappropriato",
+  "modReason_scam": "Truffa",
+  "modReason_impersonation": "Furto d’identità",
+  "modReason_other": "Altro"
 }

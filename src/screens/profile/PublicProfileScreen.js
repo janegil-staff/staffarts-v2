@@ -9,6 +9,7 @@
 // (e.g. the populated artist object from an artwork) renders instantly
 // while the full record refetches.
 
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -19,7 +20,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ChevronLeft, Pencil, MessageCircle } from 'lucide-react-native';
+import { useQueryClient } from '@tanstack/react-query';
+import { ChevronLeft, Pencil, MessageCircle, MoreVertical } from 'lucide-react-native';
 
 import SectionHeader from '../../components/SectionHeader';
 import ArtworkGrid from '../../components/ArtworkGrid';
@@ -28,6 +30,7 @@ import { useT } from '../../i18n';
 import { useAuthStore } from '../../stores/authStore';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { coverImageUrl } from '../../utils/format';
+import UserModerationSheet from '../../components/UserModerationSheet';
 
 function initialOf(u) {
   const c = u?.displayName?.trim().charAt(0) || u?.name?.trim().charAt(0);
@@ -38,6 +41,8 @@ export default function PublicProfileScreen({ route }) {
   const { colors, fontSize, spacing } = useTheme();
   const { t } = useT();
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
+  const [modVisible, setModVisible] = useState(false);
 
   const userId = route.params?.userId;
   const initialProfile = route.params?.profile ?? undefined;
@@ -89,6 +94,17 @@ export default function PublicProfileScreen({ route }) {
           >
             <ChevronLeft size={24} color={colors.text} strokeWidth={2} />
           </Pressable>
+
+          {!isSelf && !!me ? (
+            <Pressable
+              onPress={() => setModVisible(true)}
+              hitSlop={10}
+              style={({ pressed }) => [s.backBtn, pressed && { opacity: 0.7 }]}
+              accessibilityLabel={t('modOptions') ?? 'Options'}
+            >
+              <MoreVertical size={22} color={colors.text} strokeWidth={2} />
+            </Pressable>
+          ) : null}
         </View>
 
         <View style={s.header}>
@@ -176,13 +192,25 @@ export default function PublicProfileScreen({ route }) {
           </View>
         )}
       </ScrollView>
+
+      <UserModerationSheet
+        visible={modVisible}
+        onClose={() => setModVisible(false)}
+        userId={String(userId)}
+        userName={name}
+        onBlocked={() => {
+          queryClient.invalidateQueries({ queryKey: ['conversations'] });
+          queryClient.invalidateQueries({ queryKey: ['unreadTotal'] });
+          navigation.goBack();
+        }}
+      />
     </View>
   );
 }
 
 function makeStyles({ colors, fontSize, spacing }) {
   return StyleSheet.create({
-    topBar: { paddingHorizontal: spacing.lg, paddingBottom: 4 },
+    topBar: { paddingHorizontal: spacing.lg, paddingBottom: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
     backBtn: {
       width: 40,
       height: 40,

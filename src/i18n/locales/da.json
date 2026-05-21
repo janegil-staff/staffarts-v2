@@ -274,5 +274,18 @@
   "messagesYouPrefix": "Dig",
   "messagesUnknownUser": "Ukendt",
   "messagesAboutArtwork": "Om dette værk",
-  "artworkMessageArtist": "Skriv til kunstner"
+  "artworkMessageArtist": "Skriv til kunstner",
+  "modOptions": "Indstillinger",
+  "modReportUser": "Anmeld bruger",
+  "modReportMessage": "Anmeld denne besked",
+  "modBlockUser": "Blokér bruger",
+  "modReportReasonTitle": "Hvorfor anmelder du?",
+  "modBlockConfirmTitle": "Blokér bruger?",
+  "modBlockConfirmBody": "Du vil ikke længere se beskeder fra {name}, og de kan ikke skrive til dig.",
+  "modReason_spam": "Spam",
+  "modReason_harassment": "Chikane",
+  "modReason_inappropriate": "Upassende indhold",
+  "modReason_scam": "Svindel",
+  "modReason_impersonation": "Identitetstyveri",
+  "modReason_other": "Andet"
 }

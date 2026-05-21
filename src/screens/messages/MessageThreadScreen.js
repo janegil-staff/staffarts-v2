@@ -28,14 +28,14 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  Keyboard,
+  KeyboardAvoidingView,
   Platform,
   StyleSheet,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, Send } from 'lucide-react-native';
+import { ChevronLeft, Send, MoreVertical } from 'lucide-react-native';
 
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
@@ -44,6 +44,7 @@ import { useThread } from '../../hooks/useThread';
 import { setActiveConversation } from '../../services/socket';
 import * as messagesApi from '../../api/messages';
 import { coverImageUrl } from '../../utils/format';
+import UserModerationSheet from '../../components/UserModerationSheet';
 
 function initialOf(name) {
   const c = (name || '').trim().charAt(0);
@@ -58,25 +59,6 @@ export default function MessageThreadScreen({ route }) {
   const insets = useSafeAreaInsets();
   const myId = useAuthStore((s) => s.user?._id || s.user?.id || null);
 
-  // Track the keyboard height directly and pad the screen by it, so the
-  // composer always rides above the keyboard regardless of platform or the
-  // Android softwareKeyboardLayoutMode. More reliable than KeyboardAvoidingView.
-  const [kbHeight, setKbHeight] = useState(0);
-  useEffect(() => {
-    // On Android, height is reliable on the Did* events; on iOS use Will* for
-    // a smooth animated rise.
-    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-    const onShow = (e) => setKbHeight(e?.endCoordinates?.height ?? 0);
-    const onHide = () => setKbHeight(0);
-    const showSub = Keyboard.addListener(showEvt, onShow);
-    const hideSub = Keyboard.addListener(hideEvt, onHide);
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
-
   const {
     conversationId: routeConversationId,
     recipientId,
@@ -90,6 +72,7 @@ export default function MessageThreadScreen({ route }) {
   const [conversationId, setConversationId] = useState(routeConversationId || null);
 
   const [draft, setDraft] = useState('');
+  const [modVisible, setModVisible] = useState(false);
   // Once we attach the artwork to the first message, don't attach it again.
   const artworkAttachedRef = useRef(false);
 
@@ -222,12 +205,27 @@ export default function MessageThreadScreen({ route }) {
           </Text>
         </View>
 
-        <View style={{ width: 40 }} />
+        {recipientId ? (
+          <Pressable
+            onPress={() => setModVisible(true)}
+            hitSlop={10}
+            style={({ pressed }) => [s.backBtn, pressed && { opacity: 0.7 }]}
+            accessibilityLabel={t('modOptions') ?? 'Options'}
+          >
+            <MoreVertical size={22} color="#fff" strokeWidth={2.5} />
+          </Pressable>
+        ) : (
+          <View style={{ width: 40 }} />
+        )}
       </View>
 
-      {/* Padding the bottom by the live keyboard height lifts the composer
-          above the keyboard deterministically (no KeyboardAvoidingView). */}
-      <View style={{ flex: 1, paddingBottom: kbHeight }}>
+      {/* iOS lifts via KeyboardAvoidingView; Android uses its native "pan"
+          (softwareKeyboardLayoutMode: pan) and needs no avoider here. */}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 56 : 0}
+      >
         {isLoading ? (
           <View style={s.centerLoad}>
             <ActivityIndicator color={colors.accent} />
@@ -265,15 +263,10 @@ export default function MessageThreadScreen({ route }) {
           />
         )}
 
-        {/* Composer */}
-        <View
-          style={[
-            s.composer,
-            // When the keyboard is open the home indicator is covered, so drop
-            // the safe-area inset; otherwise keep it to clear the home bar.
-            { paddingBottom: kbHeight > 0 ? 10 : insets.bottom + 12 },
-          ]}
-        >
+        {/* Composer. The extra bottom padding creates a small gap between the
+            input and the top of the keyboard (in Android "pan" mode, padding
+            below the input is what the OS clears above the keyboard). */}
+        <View style={[s.composer, { paddingBottom: insets.bottom + 20 }]}>
           <TextInput
             style={s.input}
             value={draft}
@@ -300,7 +293,21 @@ export default function MessageThreadScreen({ route }) {
             )}
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
+
+      <UserModerationSheet
+        visible={modVisible}
+        onClose={() => setModVisible(false)}
+        userId={recipientId}
+        userName={recipientName}
+        conversationId={conversationId}
+        onBlocked={() => {
+          // Thread is now hidden on the server; refresh lists/badge and leave.
+          queryClient.invalidateQueries({ queryKey: ['conversations'] });
+          queryClient.invalidateQueries({ queryKey: ['unreadTotal'] });
+          navigation.goBack();
+        }}
+      />
     </View>
   );
 }
