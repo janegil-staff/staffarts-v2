@@ -4,6 +4,10 @@
 // name (server-side). A "For sale" chip filters to available pieces.
 // Single-column immersive feed (Hinge/Instagram profile-scroll style):
 // big full-width image-forward cards, one per row.
+//
+// Card height is no longer fixed — each ExploreFeedCard sizes itself to its
+// image's own aspect ratio so artwork is never cropped. This screen only
+// computes the card width (screen minus horizontal padding).
 
 import { useState, useCallback, useMemo } from 'react';
 import {
@@ -47,11 +51,10 @@ export default function ExploreScreen() {
 
   const s = makeStyles({ colors, fontSize, spacing, radius });
 
-  // Card width = screen minus horizontal padding. Height a bit taller than
-  // wide for an immersive, portrait-ish feel.
+  // Card width = screen minus horizontal padding. Height now follows each
+  // image's own aspect ratio (handled inside ExploreFeedCard).
   const H_PAD = spacing.lg;
   const cardWidth = useMemo(() => screenWidth - H_PAD * 2, [screenWidth, H_PAD]);
-  const cardHeight = useMemo(() => Math.round(cardWidth * 1.15), [cardWidth]);
 
   const onCardPress = useCallback(
     (artwork) => navigation.navigate('ArtworkDetail', { artwork }),
@@ -67,11 +70,10 @@ export default function ExploreScreen() {
       <ExploreFeedCard
         artwork={item}
         width={cardWidth}
-        height={cardHeight}
         onPress={() => onCardPress(item)}
       />
     ),
-    [cardWidth, cardHeight, onCardPress],
+    [cardWidth, onCardPress],
   );
 
   const ListHeader = (
@@ -83,7 +85,7 @@ export default function ExploreScreen() {
           value={search}
           onChangeText={setSearch}
           placeholder={t('exploreSearchPlaceholder') ?? 'Search artworks, artists…'}
-          placeholderTextColor={colors.textMuted}
+          placeholderTextColor={colors.placeholder ?? colors.textMuted}
           returnKeyType="search"
           autoCorrect={false}
           selectionColor={colors.accent}

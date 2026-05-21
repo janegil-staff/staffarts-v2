@@ -3,8 +3,12 @@
 // Big, full-width, image-forward card for the single-column Explore feed
 // (Hinge/Instagram profile-scroll style). Large cover image with the title,
 // artist, price, and status overlaid at the bottom on a gradient scrim.
+//
+// The card height follows each image's own aspect ratio — measured from the
+// loaded image via onLoad — so artwork is never cropped. Cards vary in height
+// down the feed, which is fine for a single-column layout.
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../theme/ThemeContext';
@@ -17,13 +21,18 @@ const STATUS_COLORS = {
   sold: '#e05050',
 };
 
-export default function ExploreFeedCard({ artwork, width, height, onPress }) {
+export default function ExploreFeedCard({ artwork, width, onPress }) {
   const { colors, radius, fontSize, spacing } = useTheme();
   const { t, lang } = useT();
   const s = useMemo(
     () => makeStyles({ colors, radius, fontSize, spacing }),
     [colors, radius, fontSize, spacing],
   );
+
+  // Card height follows each image's true aspect ratio (width / height).
+  // Default to 1 (square) so there's no layout jump before the image loads,
+  // and so missing-image cards still render with a sensible height.
+  const [ratio, setRatio] = useState(1);
 
   const imageUrl =
     coverImageUrl(artwork.coverImage) ||
@@ -50,9 +59,17 @@ export default function ExploreFeedCard({ artwork, width, height, onPress }) {
         pressed && { opacity: 0.92 },
       ]}
     >
-      <View style={[s.card, { width, height }]}>
+      <View style={[s.card, { width, height: width / ratio }]}>
         {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={s.image} resizeMode="cover" />
+          <Image
+            source={{ uri: imageUrl }}
+            style={s.image}
+            resizeMode="cover"
+            onLoad={(e) => {
+              const { width: w, height: h } = e.nativeEvent.source;
+              if (w && h) setRatio(w / h);
+            }}
+          />
         ) : (
           <View style={[s.image, s.placeholder]} />
         )}
@@ -95,7 +112,7 @@ function makeStyles({ colors, radius, fontSize, spacing }) {
       backgroundColor: colors.surface,
     },
     image: { width: '100%', height: '100%' },
-    placeholder: { backgroundColor: colors.borderLight },
+    placeholder: { backgroundColor: colors.borderLight ?? '#E5E5E5' },
     statusChip: {
       position: 'absolute',
       top: 12,

@@ -8,7 +8,7 @@
 //
 // Only the title is required to publish. Everything else is optional.
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
   View,
   Text,
@@ -21,19 +21,26 @@ import {
   Platform,
   ActivityIndicator,
   useWindowDimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useQueryClient } from '@tanstack/react-query';
-import { X, Plus, ChevronLeft, ChevronRight, Star, Trash2 } from 'lucide-react-native';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  X,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  Trash2,
+} from "lucide-react-native";
 
-import HeaderIconButton from '../../components/HeaderIconButton';
-import { useTheme } from '../../theme/ThemeContext';
-import { useT } from '../../i18n';
-import { useArtworkImages } from '../../hooks/useArtworkImages';
-import * as artworkApi from '../../api/artwork';
+import HeaderIconButton from "../../components/HeaderIconButton";
+import { useTheme } from "../../theme/ThemeContext";
+import { useT } from "../../i18n";
+import { useArtworkImages } from "../../hooks/useArtworkImages";
+import * as artworkApi from "../../api/artwork";
 
-const STATUSES = ['available', 'reserved', 'sold'];
-const CURRENCIES = ['NOK', 'EUR', 'USD', 'GBP', 'SEK', 'DKK'];
+const STATUSES = ["available", "reserved", "sold"];
+const CURRENCIES = ["NOK", "EUR", "USD", "GBP", "SEK", "DKK"];
 const STEP_COUNT = 4;
 
 export default function NewArtworkScreen({ route }) {
@@ -49,46 +56,44 @@ export default function NewArtworkScreen({ route }) {
   const editingId = editing?._id ?? null;
 
   const initialImages = Array.isArray(editing?.images)
-    ? editing.images.map((im) => (typeof im === 'string' ? im : im?.url)).filter(Boolean)
+    ? editing.images
+        .map((im) => (typeof im === "string" ? im : im?.url))
+        .filter(Boolean)
     : [];
 
-  const {
-    images,
-    addImage,
-    removeImage,
-    moveToCover,
-    isUploading,
-    maxImages,
-  } = useArtworkImages(initialImages);
+  const { images, addImage, removeImage, moveToCover, isUploading, maxImages } =
+    useArtworkImages(initialImages);
 
   const [step, setStep] = useState(1);
 
   // Form state (prefilled from `editing` when in edit mode)
-  const [title, setTitle] = useState(editing?.title ?? '');
-  const [description, setDescription] = useState(editing?.description ?? '');
-  const [medium, setMedium] = useState(editing?.medium ?? '');
-  const [year, setYear] = useState(editing?.year ? String(editing.year) : '');
+  const [title, setTitle] = useState(editing?.title ?? "");
+  const [description, setDescription] = useState(editing?.description ?? "");
+  const [medium, setMedium] = useState(editing?.medium ?? "");
+  const [year, setYear] = useState(editing?.year ? String(editing.year) : "");
   const [width, setWidth] = useState(
-    editing?.dimensions?.width != null ? String(editing.dimensions.width) : '',
+    editing?.dimensions?.width != null ? String(editing.dimensions.width) : "",
   );
   const [height, setHeight] = useState(
-    editing?.dimensions?.height != null ? String(editing.dimensions.height) : '',
+    editing?.dimensions?.height != null
+      ? String(editing.dimensions.height)
+      : "",
   );
   const [depth, setDepth] = useState(
-    editing?.dimensions?.depth != null ? String(editing.dimensions.depth) : '',
+    editing?.dimensions?.depth != null ? String(editing.dimensions.depth) : "",
   );
   const [showDepth, setShowDepth] = useState(
-    editing?.dimensions?.depth != null && editing.dimensions.depth !== '',
+    editing?.dimensions?.depth != null && editing.dimensions.depth !== "",
   );
-  const [unit, setUnit] = useState(editing?.dimensions?.unit ?? 'cm');
+  const [unit, setUnit] = useState(editing?.dimensions?.unit ?? "cm");
   const [price, setPrice] = useState(
-    editing?.price != null ? String(editing.price) : '',
+    editing?.price != null ? String(editing.price) : "",
   );
-  const [currency, setCurrency] = useState(editing?.currency ?? 'NOK');
-  const [status, setStatus] = useState(editing?.status ?? 'available');
+  const [currency, setCurrency] = useState(editing?.currency ?? "NOK");
+  const [status, setStatus] = useState(editing?.status ?? "available");
 
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const s = makeStyles({ colors, fontSize, radius, spacing });
 
@@ -100,16 +105,16 @@ export default function NewArtworkScreen({ route }) {
   };
 
   const next = () => {
-    setError('');
+    setError("");
     if (step === 2 && !titleValid) {
-      setError(t('artworkTitleRequired') ?? 'A title is required');
+      setError(t("artworkTitleRequired") ?? "A title is required");
       return;
     }
     setStep((p) => Math.min(p + 1, STEP_COUNT));
   };
 
   const back = () => {
-    setError('');
+    setError("");
     if (step === 1) {
       navigation.goBack();
     } else {
@@ -118,10 +123,10 @@ export default function NewArtworkScreen({ route }) {
   };
 
   const publish = async () => {
-    setError('');
+    setError("");
     if (!titleValid) {
       setStep(2);
-      setError(t('artworkTitleRequired') ?? 'A title is required');
+      setError(t("artworkTitleRequired") ?? "A title is required");
       return;
     }
     setIsSaving(true);
@@ -151,9 +156,9 @@ export default function NewArtworkScreen({ route }) {
       // Invalidate cached artwork queries so the Home feed, the artist's
       // own grid, and the detail view all refetch and reflect the change
       // immediately instead of waiting out the staleTime.
-      queryClient.invalidateQueries({ queryKey: ['artworks'] });
+      queryClient.invalidateQueries({ queryKey: ["artworks"] });
       if (editingId) {
-        queryClient.invalidateQueries({ queryKey: ['artwork', editingId] });
+        queryClient.invalidateQueries({ queryKey: ["artwork", editingId] });
       }
 
       navigation.goBack();
@@ -162,8 +167,8 @@ export default function NewArtworkScreen({ route }) {
       setError(
         e?.response?.data?.error ||
           (editingId
-            ? (t('artworkSaveFailed') ?? 'Could not save changes')
-            : (t('artworkPublishFailed') ?? 'Could not publish artwork')),
+            ? (t("artworkSaveFailed") ?? "Could not save changes")
+            : (t("artworkPublishFailed") ?? "Could not publish artwork")),
       );
     } finally {
       setIsSaving(false);
@@ -176,14 +181,14 @@ export default function NewArtworkScreen({ route }) {
       <View style={[s.header, { paddingTop: spacing.lg + 24 }]}>
         <HeaderIconButton
           onPress={() => navigation.goBack()}
-          accessibilityLabel={t('close') ?? 'Close'}
+          accessibilityLabel={t("close") ?? "Close"}
         >
           <X size={22} color="#fff" strokeWidth={2} />
         </HeaderIconButton>
         <Text style={s.headerTitle}>
           {editingId
-            ? (t('artworkEditTitle') ?? 'Edit artwork')
-            : (t('artworkNewTitle') ?? 'New artwork')}
+            ? (t("artworkEditTitle") ?? "Edit artwork")
+            : (t("artworkNewTitle") ?? "New artwork")}
         </Text>
         <View style={{ width: 36 }} />
       </View>
@@ -197,7 +202,9 @@ export default function NewArtworkScreen({ route }) {
               s.dot,
               {
                 backgroundColor:
-                  i + 1 <= step ? colors.accent : (colors.borderLight ?? '#ddd'),
+                  i + 1 <= step
+                    ? colors.accent
+                    : (colors.borderLight ?? "#ddd"),
                 width: i + 1 === step ? 24 : 8,
               },
             ]}
@@ -206,7 +213,7 @@ export default function NewArtworkScreen({ route }) {
       </View>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
       >
         <ScrollView
@@ -278,7 +285,7 @@ export default function NewArtworkScreen({ route }) {
               year={year}
               width={width}
               height={height}
-              depth={showDepth ? depth : ''}
+              depth={showDepth ? depth : ""}
               unit={unit}
               price={price}
               currency={currency}
@@ -297,7 +304,7 @@ export default function NewArtworkScreen({ route }) {
           >
             <ChevronLeft size={18} color={colors.text} strokeWidth={2} />
             <Text style={s.backText}>
-              {step === 1 ? (t('cancel') ?? 'Cancel') : (t('back') ?? 'Back')}
+              {step === 1 ? (t("cancel") ?? "Cancel") : (t("back") ?? "Back")}
             </Text>
           </Pressable>
 
@@ -310,24 +317,21 @@ export default function NewArtworkScreen({ route }) {
                 pressed && canAdvance() && { opacity: 0.85 },
               ]}
             >
-              <Text style={s.nextText}>{t('next') ?? 'Next'}</Text>
+              <Text style={s.nextText}>{t("next") ?? "Next"}</Text>
               <ChevronRight size={18} color="#fff" strokeWidth={2} />
             </Pressable>
           ) : (
             <Pressable
               onPress={isSaving ? undefined : publish}
-              style={({ pressed }) => [
-                s.nextBtn,
-                pressed && { opacity: 0.85 },
-              ]}
+              style={({ pressed }) => [s.nextBtn, pressed && { opacity: 0.85 }]}
             >
               {isSaving ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
                 <Text style={s.nextText}>
                   {(editingId
-                    ? (t('artworkSave') ?? 'Save')
-                    : (t('artworkPublish') ?? 'Publish')
+                    ? (t("artworkSave") ?? "Save")
+                    : (t("artworkPublish") ?? "Publish")
                   ).toUpperCase()}
                 </Text>
               )}
@@ -341,7 +345,17 @@ export default function NewArtworkScreen({ route }) {
 
 // ── Step 1: Images ─────────────────────────────────────────────────────────
 
-function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, isUploading, maxImages }) {
+function StepImages({
+  s,
+  t,
+  colors,
+  images,
+  addImage,
+  removeImage,
+  moveToCover,
+  isUploading,
+  maxImages,
+}) {
   // Compute a fixed square size for the 3-column grid. Using a fixed pixel
   // size (rather than width:'30%' + aspectRatio) guarantees true squares —
   // aspectRatio on percentage widths collapses in flex-wrap layouts.
@@ -356,9 +370,9 @@ function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, 
 
   return (
     <View>
-      <Text style={s.stepTitle}>{t('artworkStepImages') ?? 'Images'}</Text>
+      <Text style={s.stepTitle}>{t("artworkStepImages") ?? "Images"}</Text>
       <Text style={s.stepHint}>
-        {t('artworkImagesHint') ??
+        {t("artworkImagesHint") ??
           `Add up to ${maxImages} images. The first one is the cover.`}
       </Text>
 
@@ -369,7 +383,7 @@ function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, 
             {i === 0 && (
               <View style={s.coverBadge}>
                 <Star size={12} color="#fff" fill="#fff" />
-                <Text style={s.coverText}>{t('artworkCover') ?? 'Cover'}</Text>
+                <Text style={s.coverText}>{t("artworkCover") ?? "Cover"}</Text>
               </View>
             )}
             <View style={s.imageActions}>
@@ -418,62 +432,101 @@ function StepImages({ s, t, colors, images, addImage, removeImage, moveToCover, 
 // ── Step 2: Details ──────────────────────────────────────────────────────
 
 function StepDetails({
-  s, t, colors,
-  title, setTitle,
-  description, setDescription,
-  medium, setMedium,
-  year, setYear,
-  width, setWidth,
-  height, setHeight,
-  depth, setDepth,
-  showDepth, setShowDepth,
-  unit, setUnit,
+  s,
+  t,
+  colors,
+  title,
+  setTitle,
+  description,
+  setDescription,
+  medium,
+  setMedium,
+  year,
+  setYear,
+  width,
+  setWidth,
+  height,
+  setHeight,
+  depth,
+  setDepth,
+  showDepth,
+  setShowDepth,
+  unit,
+  setUnit,
 }) {
   return (
     <View>
-      <Text style={s.stepTitle}>{t('artworkStepDetails') ?? 'Details'}</Text>
+      <Text style={s.stepTitle}>{t("artworkStepDetails") ?? "Details"}</Text>
 
       <Field
-        s={s} colors={colors}
-        label={`${t('artworkTitle') ?? 'Title'}*`}
-        value={title} onChangeText={setTitle}
-        placeholder={t('artworkTitlePlaceholder') ?? 'Untitled'}
+        s={s}
+        colors={colors}
+        label={`${t("artworkTitle") ?? "Title"}*`}
+        value={title}
+        onChangeText={setTitle}
+        placeholder={t("artworkTitlePlaceholder") ?? "Untitled"}
       />
 
       <Field
-        s={s} colors={colors}
-        label={t('artworkDescription') ?? 'Description'}
-        value={description} onChangeText={setDescription}
-        placeholder={t('artworkDescriptionPlaceholder') ?? 'About this piece…'}
+        s={s}
+        colors={colors}
+        label={t("artworkDescription") ?? "Description"}
+        value={description}
+        onChangeText={setDescription}
+        placeholder={t("artworkDescriptionPlaceholder") ?? "About this piece…"}
         multiline
       />
 
       <Field
-        s={s} colors={colors}
-        label={t('artworkMedium') ?? 'Medium'}
-        value={medium} onChangeText={setMedium}
-        placeholder={t('artworkMediumPlaceholder') ?? 'Oil on canvas, mixed media…'}
+        s={s}
+        colors={colors}
+        label={t("artworkMedium") ?? "Medium"}
+        value={medium}
+        onChangeText={setMedium}
+        placeholder={
+          t("artworkMediumPlaceholder") ?? "Oil on canvas, mixed media…"
+        }
       />
 
       <Field
-        s={s} colors={colors}
-        label={t('artworkYear') ?? 'Year'}
-        value={year} onChangeText={setYear}
+        s={s}
+        colors={colors}
+        label={t("artworkYear") ?? "Year"}
+        value={year}
+        onChangeText={setYear}
         placeholder="2026"
         keyboardType="number-pad"
       />
 
       <Text style={[s.fieldLabel, { marginTop: 8 }]}>
-        {t('artworkDimensions') ?? 'Dimensions'}
+        {t("artworkDimensions") ?? "Dimensions"}
       </Text>
       <View style={s.dimRow}>
-        <DimInput s={s} colors={colors} value={width} onChangeText={setWidth} placeholder={t('artworkWidth') ?? 'W'} />
+        <DimInput
+          s={s}
+          colors={colors}
+          value={width}
+          onChangeText={setWidth}
+          placeholder={t("artworkWidth") ?? "W"}
+        />
         <Text style={s.dimX}>×</Text>
-        <DimInput s={s} colors={colors} value={height} onChangeText={setHeight} placeholder={t('artworkHeight') ?? 'H'} />
+        <DimInput
+          s={s}
+          colors={colors}
+          value={height}
+          onChangeText={setHeight}
+          placeholder={t("artworkHeight") ?? "H"}
+        />
         {showDepth && (
           <>
             <Text style={s.dimX}>×</Text>
-            <DimInput s={s} colors={colors} value={depth} onChangeText={setDepth} placeholder={t('artworkDepth') ?? 'D'} />
+            <DimInput
+              s={s}
+              colors={colors}
+              value={depth}
+              onChangeText={setDepth}
+              placeholder={t("artworkDepth") ?? "D"}
+            />
           </>
         )}
       </View>
@@ -481,7 +534,7 @@ function StepDetails({
       {/* Depth toggle */}
       <Pressable
         onPress={() => {
-          if (showDepth) setDepth(''); // clear depth when hiding
+          if (showDepth) setDepth(""); // clear depth when hiding
           setShowDepth(!showDepth);
         }}
         style={({ pressed }) => [s.depthToggle, pressed && { opacity: 0.6 }]}
@@ -489,22 +542,27 @@ function StepDetails({
       >
         <Text style={[s.depthToggleText, { color: colors.accent }]}>
           {showDepth
-            ? (t('artworkRemoveDepth') ?? '− Remove depth')
-            : (t('artworkAddDepth') ?? '+ Add depth (for 3D work)')}
+            ? (t("artworkRemoveDepth") ?? "− Remove depth")
+            : (t("artworkAddDepth") ?? "+ Add depth (for 3D work)")}
         </Text>
       </Pressable>
 
       <View style={s.unitRow}>
-        {['cm', 'in'].map((u) => (
+        {["cm", "in"].map((u) => (
           <Pressable
             key={u}
             onPress={() => setUnit(u)}
             style={[
               s.unitChip,
-              unit === u && { backgroundColor: colors.accent, borderColor: colors.accent },
+              unit === u && {
+                backgroundColor: colors.accent,
+                borderColor: colors.accent,
+              },
             ]}
           >
-            <Text style={[s.unitChipText, unit === u && { color: '#fff' }]}>{u}</Text>
+            <Text style={[s.unitChipText, unit === u && { color: "#fff" }]}>
+              {u}
+            </Text>
           </Pressable>
         ))}
       </View>
@@ -514,20 +572,36 @@ function StepDetails({
 
 // ── Step 3: Price & status ─────────────────────────────────────────────────
 
-function StepPrice({ s, t, colors, price, setPrice, currency, setCurrency, status, setStatus }) {
+function StepPrice({
+  s,
+  t,
+  colors,
+  price,
+  setPrice,
+  currency,
+  setCurrency,
+  status,
+  setStatus,
+}) {
   return (
     <View>
-      <Text style={s.stepTitle}>{t('artworkStepPrice') ?? 'Price & status'}</Text>
+      <Text style={s.stepTitle}>
+        {t("artworkStepPrice") ?? "Price & status"}
+      </Text>
 
       <Field
-        s={s} colors={colors}
-        label={t('artworkPrice') ?? 'Price'}
-        value={price} onChangeText={setPrice}
+        s={s}
+        colors={colors}
+        label={t("artworkPrice") ?? "Price"}
+        value={price}
+        onChangeText={setPrice}
         placeholder="0"
         keyboardType="decimal-pad"
       />
 
-      <Text style={[s.fieldLabel, { marginTop: 8 }]}>{t('artworkCurrency') ?? 'Currency'}</Text>
+      <Text style={[s.fieldLabel, { marginTop: 8 }]}>
+        {t("artworkCurrency") ?? "Currency"}
+      </Text>
       <View style={s.chipRow}>
         {CURRENCIES.map((c) => (
           <Pressable
@@ -535,15 +609,22 @@ function StepPrice({ s, t, colors, price, setPrice, currency, setCurrency, statu
             onPress={() => setCurrency(c)}
             style={[
               s.chip,
-              currency === c && { backgroundColor: colors.accent, borderColor: colors.accent },
+              currency === c && {
+                backgroundColor: colors.accent,
+                borderColor: colors.accent,
+              },
             ]}
           >
-            <Text style={[s.chipText, currency === c && { color: '#fff' }]}>{c}</Text>
+            <Text style={[s.chipText, currency === c && { color: "#fff" }]}>
+              {c}
+            </Text>
           </Pressable>
         ))}
       </View>
 
-      <Text style={[s.fieldLabel, { marginTop: 24 }]}>{t('artworkStatus') ?? 'Status'}</Text>
+      <Text style={[s.fieldLabel, { marginTop: 24 }]}>
+        {t("artworkStatus") ?? "Status"}
+      </Text>
       <View style={s.chipRow}>
         {STATUSES.map((st) => (
           <Pressable
@@ -551,10 +632,13 @@ function StepPrice({ s, t, colors, price, setPrice, currency, setCurrency, statu
             onPress={() => setStatus(st)}
             style={[
               s.chip,
-              status === st && { backgroundColor: colors.accent, borderColor: colors.accent },
+              status === st && {
+                backgroundColor: colors.accent,
+                borderColor: colors.accent,
+              },
             ]}
           >
-            <Text style={[s.chipText, status === st && { color: '#fff' }]}>
+            <Text style={[s.chipText, status === st && { color: "#fff" }]}>
               {t(`artworkStatus_${st}`) ?? st}
             </Text>
           </Pressable>
@@ -566,30 +650,83 @@ function StepPrice({ s, t, colors, price, setPrice, currency, setCurrency, statu
 
 // ── Step 4: Review ─────────────────────────────────────────────────────────
 
-function StepReview({ s, t, images, title, description, medium, year, width, height, depth, unit, price, currency, status }) {
-  const dimsStr = [width, height, depth].filter(Boolean).join(' × ');
+function StepReview({
+  s,
+  t,
+  images,
+  title,
+  description,
+  medium,
+  year,
+  width,
+  height,
+  depth,
+  unit,
+  price,
+  currency,
+  status,
+}) {
+  const dimsStr = [width, height, depth].filter(Boolean).join(" × ");
   return (
     <View>
-      <Text style={s.stepTitle}>{t('artworkStepReview') ?? 'Review'}</Text>
+      <Text style={s.stepTitle}>{t("artworkStepReview") ?? "Review"}</Text>
 
       {images[0] ? (
         <Image source={{ uri: images[0] }} style={s.reviewCover} />
       ) : (
         <View style={[s.reviewCover, s.reviewCoverEmpty]}>
           <Text style={s.reviewCoverEmptyText}>
-            {t('artworkNoImages') ?? 'No images'}
+            {t("artworkNoImages") ?? "No images"}
           </Text>
         </View>
       )}
 
-      <ReviewRow s={s} label={t('artworkTitle') ?? 'Title'} value={title || '—'} />
-      {!!description && <ReviewRow s={s} label={t('artworkDescription') ?? 'Description'} value={description} />}
-      {!!medium && <ReviewRow s={s} label={t('artworkMedium') ?? 'Medium'} value={medium} />}
-      {!!year && <ReviewRow s={s} label={t('artworkYear') ?? 'Year'} value={year} />}
-      {!!dimsStr && <ReviewRow s={s} label={t('artworkDimensions') ?? 'Dimensions'} value={`${dimsStr} ${unit}`} />}
-      {!!price && <ReviewRow s={s} label={t('artworkPrice') ?? 'Price'} value={`${price} ${currency}`} />}
-      <ReviewRow s={s} label={t('artworkStatus') ?? 'Status'} value={t(`artworkStatus_${status}`) ?? status} />
-      <ReviewRow s={s} label={t('artworkImages') ?? 'Images'} value={String(images.length)} />
+      <ReviewRow
+        s={s}
+        label={t("artworkTitle") ?? "Title"}
+        value={title || "—"}
+      />
+      {!!description && (
+        <ReviewRow
+          s={s}
+          label={t("artworkDescription") ?? "Description"}
+          value={description}
+        />
+      )}
+      {!!medium && (
+        <ReviewRow
+          s={s}
+          label={t("artworkMedium") ?? "Medium"}
+          value={medium}
+        />
+      )}
+      {!!year && (
+        <ReviewRow s={s} label={t("artworkYear") ?? "Year"} value={year} />
+      )}
+      {!!dimsStr && (
+        <ReviewRow
+          s={s}
+          label={t("artworkDimensions") ?? "Dimensions"}
+          value={`${dimsStr} ${unit}`}
+        />
+      )}
+      {!!price && (
+        <ReviewRow
+          s={s}
+          label={t("artworkPrice") ?? "Price"}
+          value={`${price} ${currency}`}
+        />
+      )}
+      <ReviewRow
+        s={s}
+        label={t("artworkStatus") ?? "Status"}
+        value={t(`artworkStatus_${status}`) ?? status}
+      />
+      <ReviewRow
+        s={s}
+        label={t("artworkImages") ?? "Images"}
+        value={String(images.length)}
+      />
     </View>
   );
 }
@@ -605,7 +742,16 @@ function ReviewRow({ s, label, value }) {
 
 // ── Shared field components ─────────────────────────────────────────────────
 
-function Field({ s, colors, label, value, onChangeText, placeholder, multiline, keyboardType }) {
+function Field({
+  s,
+  colors,
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  multiline,
+  keyboardType,
+}) {
   return (
     <View style={{ marginBottom: 18 }}>
       <Text style={s.fieldLabel}>{label}</Text>
@@ -614,10 +760,10 @@ function Field({ s, colors, label, value, onChangeText, placeholder, multiline, 
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={colors.textMuted}
+        placeholderTextColor={'#D8D4CE'}
         multiline={multiline}
         keyboardType={keyboardType}
-        textAlignVertical={multiline ? 'top' : 'center'}
+        textAlignVertical={multiline ? "top" : "center"}
         selectionColor={colors.accent}
       />
       <View style={s.underline} />
@@ -632,7 +778,7 @@ function DimInput({ s, colors, value, onChangeText, placeholder }) {
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor={colors.textMuted}
+      placeholderTextColor={'#D8D4CE'}
       keyboardType="decimal-pad"
       selectionColor={colors.accent}
     />
@@ -642,21 +788,21 @@ function DimInput({ s, colors, value, onChangeText, placeholder }) {
 const makeStyles = ({ colors, fontSize, radius, spacing }) =>
   StyleSheet.create({
     header: {
-      backgroundColor: '#2D4A6E',
+      backgroundColor: "#2D4A6E",
       paddingHorizontal: spacing.lg,
       paddingBottom: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     headerTitle: {
-      color: '#fff',
+      color: "#fff",
       fontSize: fontSize.lg,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     progress: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
       gap: 6,
       paddingVertical: 16,
     },
@@ -666,7 +812,7 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
     },
     stepTitle: {
       fontSize: fontSize.xl,
-      fontWeight: '700',
+      fontWeight: "700",
       color: colors.text,
       marginBottom: 8,
     },
@@ -678,73 +824,73 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
     },
     // Images
     imageGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
     },
     imageCell: {
       borderRadius: radius.md,
-      overflow: 'hidden',
-      position: 'relative',
+      overflow: "hidden",
+      position: "relative",
     },
-    imageThumb: { width: '100%', height: '100%' },
+    imageThumb: { width: "100%", height: "100%" },
     coverBadge: {
-      position: 'absolute',
+      position: "absolute",
       top: 6,
       left: 6,
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 3,
-      backgroundColor: 'rgba(0,0,0,0.6)',
+      backgroundColor: "rgba(0,0,0,0.6)",
       paddingHorizontal: 6,
       paddingVertical: 2,
       borderRadius: 8,
     },
-    coverText: { color: '#fff', fontSize: 10, fontWeight: '700' },
+    coverText: { color: "#fff", fontSize: 10, fontWeight: "700" },
     imageActions: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 6,
       right: 6,
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 6,
     },
     imageActionBtn: {
       width: 26,
       height: 26,
       borderRadius: 13,
-      backgroundColor: 'rgba(0,0,0,0.6)',
-      alignItems: 'center',
-      justifyContent: 'center',
+      backgroundColor: "rgba(0,0,0,0.6)",
+      alignItems: "center",
+      justifyContent: "center",
     },
     addCell: {
       borderRadius: radius.md,
       borderWidth: 1.5,
-      borderStyle: 'dashed',
+      borderStyle: "dashed",
       borderColor: colors.accent,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     // Fields
     fieldLabel: {
       color: colors.textMuted,
       fontSize: fontSize.sm,
-      fontWeight: '600',
+      fontWeight: "600",
       marginBottom: 6,
     },
     input: {
       color: colors.text,
       fontSize: fontSize.md,
-      fontWeight: '500',
+      fontWeight: "500",
       paddingVertical: 8,
     },
     inputMultiline: { minHeight: 90 },
     underline: {
       height: 1.5,
-      backgroundColor: colors.borderLight ?? '#ccc',
+      backgroundColor: colors.borderLight ?? "#ccc",
     },
     dimRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     dimInput: {
@@ -753,106 +899,110 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       fontSize: fontSize.md,
       paddingVertical: 8,
       borderBottomWidth: 1.5,
-      borderBottomColor: colors.borderLight ?? '#ccc',
-      textAlign: 'center',
+      borderBottomColor: colors.borderLight ?? "#ccc",
+      textAlign: "center",
     },
     dimX: { color: colors.textMuted, fontSize: fontSize.md },
     depthToggle: {
       marginTop: 12,
-      alignSelf: 'flex-start',
+      alignSelf: "flex-start",
       paddingVertical: 4,
     },
     depthToggleText: {
       fontSize: fontSize.sm,
-      fontWeight: '600',
+      fontWeight: "600",
     },
-    unitRow: { flexDirection: 'row', gap: 8, marginTop: 12 },
+    unitRow: { flexDirection: "row", gap: 8, marginTop: 12 },
     unitChip: {
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 999,
       borderWidth: 1.5,
-      borderColor: colors.borderLight ?? '#ccc',
+      borderColor: colors.borderLight ?? "#ccc",
     },
-    unitChipText: { color: colors.text, fontWeight: '600', fontSize: fontSize.sm },
-    chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+    unitChipText: {
+      color: colors.text,
+      fontWeight: "600",
+      fontSize: fontSize.sm,
+    },
+    chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
     chip: {
       paddingHorizontal: 16,
       paddingVertical: 10,
       borderRadius: 999,
       borderWidth: 1.5,
-      borderColor: colors.borderLight ?? '#ccc',
+      borderColor: colors.borderLight ?? "#ccc",
     },
-    chipText: { color: colors.text, fontWeight: '600', fontSize: fontSize.sm },
+    chipText: { color: colors.text, fontWeight: "600", fontSize: fontSize.sm },
     // Review
     reviewCover: {
-      width: '100%',
+      width: "100%",
       height: 200,
       borderRadius: radius.md,
       marginBottom: 16,
     },
     reviewCoverEmpty: {
       backgroundColor: colors.surface,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     reviewCoverEmptyText: { color: colors.textMuted, fontSize: fontSize.sm },
     reviewRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       paddingVertical: 12,
       borderBottomWidth: 1,
-      borderBottomColor: colors.borderLight ?? '#eee',
+      borderBottomColor: colors.borderLight ?? "#eee",
       gap: 16,
     },
     reviewLabel: { color: colors.textMuted, fontSize: fontSize.sm },
     reviewValue: {
       color: colors.text,
       fontSize: fontSize.md,
-      fontWeight: '500',
+      fontWeight: "500",
       flex: 1,
-      textAlign: 'right',
+      textAlign: "right",
     },
     error: {
-      color: colors.danger ?? '#C62828',
+      color: colors.danger ?? "#C62828",
       fontSize: fontSize.sm,
       marginTop: 16,
-      textAlign: 'center',
+      textAlign: "center",
     },
     // Footer
     footer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       paddingHorizontal: 24,
       paddingVertical: 16,
       borderTopWidth: 1,
-      borderTopColor: colors.borderLight ?? '#eee',
+      borderTopColor: colors.borderLight ?? "#eee",
     },
     backBtn: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
       paddingVertical: 10,
       paddingHorizontal: 8,
     },
-    backText: { color: colors.text, fontSize: fontSize.md, fontWeight: '600' },
+    backText: { color: colors.text, fontSize: fontSize.md, fontWeight: "600" },
     nextBtn: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 4,
       backgroundColor: colors.accent,
       paddingVertical: 12,
       paddingHorizontal: 24,
       borderRadius: 10,
       minWidth: 120,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     nextBtnDisabled: { opacity: 0.4 },
     nextText: {
-      color: '#fff',
+      color: "#fff",
       fontSize: fontSize.md,
-      fontWeight: '800',
+      fontWeight: "800",
       letterSpacing: 1,
     },
   });
