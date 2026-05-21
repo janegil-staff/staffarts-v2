@@ -16,7 +16,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { MessageCircle, Plus, Pencil } from 'lucide-react-native';
+import { Pencil } from 'lucide-react-native';
 
 import Header from '../../components/Header';
 import SectionHeader from '../../components/SectionHeader';
@@ -33,11 +33,6 @@ function initialOf(user) {
     user?.email?.trim().charAt(0);
   return c ? c.toUpperCase() : '?';
 }
-
-const BUTTON_SIZE = 56;
-const MIDDLE_OFFSET = 10;
-const ICON_SIDE = 18;
-const ICON_MIDDLE = 20;
 
 export default function ProfileScreen() {
   const { colors, fontSize, radius, spacing } = useTheme();
@@ -102,34 +97,15 @@ function LoggedInProfile() {
             </Text>
           )}
 
-          <View style={s.actionRow}>
-            <ActionButton
-              accessibilityLabel={t('profileMessages') ?? 'Messages'}
-              onPress={() => {
-                // TODO: navigation.navigate('Messages')
-              }}
-              colors={colors}
-            >
-              <MessageCircle size={ICON_SIDE} color="#fff" strokeWidth={2} />
-            </ActionButton>
-
-            <ActionButton
-              accessibilityLabel={t('profileNewArtwork') ?? 'New artwork'}
-              onPress={() => navigation.navigate('NewArtwork')}
-              colors={colors}
-              style={{ marginTop: MIDDLE_OFFSET }}
-            >
-              <Plus size={ICON_MIDDLE} color="#fff" strokeWidth={2.5} />
-            </ActionButton>
-
-            <ActionButton
-              accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
-              onPress={() => navigation.navigate('EditProfile')}
-              colors={colors}
-            >
-              <Pencil size={ICON_SIDE} color="#fff" strokeWidth={2} />
-            </ActionButton>
-          </View>
+          <Pressable
+            onPress={() => navigation.navigate('EditProfile')}
+            accessibilityRole="button"
+            accessibilityLabel={t('profileEdit') ?? 'Edit profile'}
+            style={({ pressed }) => [s.editBtn, pressed && { opacity: 0.85 }]}
+          >
+            <Pencil size={16} color={colors.accent} strokeWidth={2} />
+            <Text style={s.editBtnText}>{t('profileEdit') ?? 'Edit profile'}</Text>
+          </Pressable>
         </View>
 
         {/* My artworks */}
@@ -203,36 +179,6 @@ function AboutContent() {
   );
 }
 
-function ActionButton({ children, onPress, accessibilityLabel, colors, style }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
-      hitSlop={8}
-      style={({ pressed }) => [
-        {
-          width: BUTTON_SIZE,
-          height: BUTTON_SIZE,
-          borderRadius: BUTTON_SIZE / 2,
-          backgroundColor: colors.accent,
-          alignItems: 'center',
-          justifyContent: 'center',
-          shadowColor: colors.accent,
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 4 },
-          elevation: 4,
-          opacity: pressed ? 0.85 : 1,
-        },
-        style,
-      ]}
-    >
-      {children}
-    </Pressable>
-  );
-}
-
 const makeStyles = ({ colors, fontSize, radius, spacing }) =>
   StyleSheet.create({
     topWrap: { padding: 24, alignItems: 'center' },
@@ -261,13 +207,22 @@ const makeStyles = ({ colors, fontSize, radius, spacing }) =>
       textAlign: 'center',
       paddingHorizontal: 16,
     },
-    actionRow: {
-      marginTop: 32,
+    editBtn: {
+      marginTop: 28,
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'center',
       justifyContent: 'center',
-      gap: 20,
-      paddingBottom: MIDDLE_OFFSET + 8,
+      gap: 8,
+      alignSelf: 'stretch',
+      paddingVertical: 14,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: colors.accent,
+    },
+    editBtnText: {
+      color: colors.accent,
+      fontSize: fontSize.md,
+      fontWeight: '700',
     },
     loadingWrap: { padding: 40, alignItems: 'center' },
     emptyWrap: { paddingHorizontal: 32, paddingVertical: 24, alignItems: 'center' },
