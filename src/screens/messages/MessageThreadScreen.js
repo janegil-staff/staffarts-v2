@@ -29,7 +29,6 @@ import {
   Image,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Keyboard,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -74,20 +73,6 @@ export default function MessageThreadScreen({ route }) {
 
   const [draft, setDraft] = useState('');
   const [modVisible, setModVisible] = useState(false);
-  // Track keyboard visibility so the composer can drop its big home-indicator
-  // bottom padding while the keyboard is open (otherwise that padding shows as
-  // a gap between the input and the keyboard).
-  const [kbOpen, setKbOpen] = useState(false);
-  useEffect(() => {
-    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-    const show = Keyboard.addListener(showEvt, () => setKbOpen(true));
-    const hide = Keyboard.addListener(hideEvt, () => setKbOpen(false));
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, []);
   // Once we attach the artwork to the first message, don't attach it again.
   const artworkAttachedRef = useRef(false);
 
@@ -195,11 +180,7 @@ export default function MessageThreadScreen({ route }) {
   );
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: colors.background }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={0}
-    >
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       {/* Header */}
       <View style={[s.header, { paddingTop: spacing.lg + 24 }]}>
         <Pressable
@@ -238,9 +219,13 @@ export default function MessageThreadScreen({ route }) {
         )}
       </View>
 
-      {/* The outer KeyboardAvoidingView (wrapping the whole screen) handles the
-          iOS lift; Android uses its native "pan". This is just the content area. */}
-      <View style={{ flex: 1 }}>
+      {/* iOS lifts via KeyboardAvoidingView; Android uses its native "pan"
+          (softwareKeyboardLayoutMode: pan) and needs no avoider here. */}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 56 : 0}
+      >
         {isLoading ? (
           <View style={s.centerLoad}>
             <ActivityIndicator color={colors.accent} />
@@ -281,7 +266,7 @@ export default function MessageThreadScreen({ route }) {
         {/* Composer. The extra bottom padding creates a small gap between the
             input and the top of the keyboard (in Android "pan" mode, padding
             below the input is what the OS clears above the keyboard). */}
-        <View style={[s.composer, { paddingBottom: kbOpen ? 10 : insets.bottom + 20 }]}>
+        <View style={[s.composer, { paddingBottom: insets.bottom + 20 }]}>
           <TextInput
             style={s.input}
             value={draft}
@@ -308,7 +293,7 @@ export default function MessageThreadScreen({ route }) {
             )}
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
 
       <UserModerationSheet
         visible={modVisible}
@@ -323,7 +308,7 @@ export default function MessageThreadScreen({ route }) {
           navigation.goBack();
         }}
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
