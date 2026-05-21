@@ -73,7 +73,7 @@ export default function LoginScreen({ navigation }) {
           {/* Logo */}
           <View style={s.logoWrap}>
             <Image
-              source={require('../../../assets/focus_logo.png')}
+              source={require('../../../assets/logo-light.png')}
               style={s.logo}
               resizeMode="cover"
             />

@@ -144,7 +144,7 @@ function AboutContent() {
       <ScrollView contentContainerStyle={a.scroll}>
         <View style={a.logoWrap}>
           <Image
-            source={require('../../../assets/focus_logo.png')}
+            source={require('../../../assets/logo-light.png')}
             style={a.logo}
             resizeMode="cover"
           />

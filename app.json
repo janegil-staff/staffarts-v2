@@ -4,10 +4,10 @@
     "slug": "staffartsv2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/focus_logo.png",
+    "icon": "./assets/logo-light.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/focus_logo.png",
+      "image": "./assets/logo-light.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -24,7 +24,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/focus_logo.png"
+      "favicon": "./assets/logo-light.png"
     },
     "plugins": [
       "expo-secure-store",

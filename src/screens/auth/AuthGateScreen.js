@@ -95,7 +95,7 @@ export default function AuthGateScreen() {
         {/* Logo */}
         <View style={styles.logoWrap}>
           <Image
-            source={require('../../../assets/focus_logo.png')}
+            source={require('../../../assets/logo-light.png')}
             style={styles.logo}
             resizeMode="cover"
           />
