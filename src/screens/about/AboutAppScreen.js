@@ -65,8 +65,9 @@ export default function AboutAppScreen() {
 
         {/* Footer */}
         <Text style={s.footer}>
-          {t('aboutAppFooter') ?? 'Qup DA · staffarts.com'}
+          {t('aboutAppFooter') ?? 'Qup DA · qupda.com'}
         </Text>
+        <Text style={s.footerEmail}>jan.egil@qupda.com</Text>
       </ScrollView>
     </View>
   );
@@ -157,6 +158,12 @@ function makeStyles({ colors, fontSize, spacing, radius }) {
     },
     footer: {
       marginTop: 32,
+      fontSize: fontSize.xs,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+    footerEmail: {
+      marginTop: 4,
       fontSize: fontSize.xs,
       color: colors.textMuted,
       textAlign: 'center',

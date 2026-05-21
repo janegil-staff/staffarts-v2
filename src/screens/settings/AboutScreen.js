@@ -14,8 +14,8 @@ import { useT } from '../../i18n';
 const APP_VERSION = '1.0.0';
 const COMPANY = 'Qup DA';
 const ORG_NUMBER = '912 372 022';
-const SUPPORT_EMAIL = 'post@staffarts.com';
-const WEBSITE = 'https://staffarts.com';
+const SUPPORT_EMAIL = 'jan.egil@qupda.com';
+const WEBSITE = 'https://qupda.com';
 
 export default function AboutScreen() {
   const { colors, fontSize } = useTheme();

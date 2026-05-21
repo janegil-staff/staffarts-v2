@@ -199,16 +199,17 @@ export default function ForgotPinScreen({ navigation, route }) {
               >
                 {t('authResetCode') ?? 'Reset code (6 digits)'}
               </Text>
-              <TextInput
-                style={inputStyle}
-                placeholder="123456"
-                placeholderTextColor={colors.textFaint}
+              {/* 6-slot underline input, digits visible (it's a transcribed
+                  email code, not a secret) — matches the PIN fields' style. */}
+              <PinInput
                 value={code}
-                onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
-                keyboardType="number-pad"
-                maxLength={6}
+                onChange={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
+                length={6}
+                secure={false}
                 editable={!isSubmitting}
               />
+
+              <View style={{ height: spacing.lg }} />
 
               <Text
                 style={{
