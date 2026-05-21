@@ -3,6 +3,12 @@
 // Artwork detail. Receives the artwork object via route params (from the
 // card tap) for instant render, then refetches the full record by id to
 // fill in anything the list view didn't include (full artist, all images).
+//
+// Image gallery: a horizontal paging carousel. Because paging requires every
+// slide to share the same width (screenWidth), the stage uses a single
+// adaptive height (driven by the images' real aspect ratios) and shows each
+// image with resizeMode="contain" — so the customer always sees the full,
+// uncropped artwork. Letterbox space is filled with a neutral backdrop.
 
 import { useState } from 'react';
 import {
@@ -30,6 +36,12 @@ const STATUS_COLORS = {
   reserved: '#e8a838',
   sold: '#e05050',
 };
+
+// Bounds for the gallery stage height, expressed as a fraction of the screen
+// width. Keeps very tall (portrait) or very wide (panoramic) pieces from
+// producing an absurd stage while still respecting their true proportions.
+const MIN_STAGE_RATIO = 0.6; // wide/panoramic floor  (height >= 0.6 * width)
+const MAX_STAGE_RATIO = 1.4; // tall/portrait ceiling (height <= 1.4 * width)
 
 function imagesOf(artwork) {
   if (Array.isArray(artwork?.images) && artwork.images.length) {
@@ -60,6 +72,21 @@ export default function ArtworkDetailScreen({ route }) {
   const artwork = data ?? passed;
   const images = imagesOf(artwork);
   const [activeIdx, setActiveIdx] = useState(0);
+
+  // Stage height follows the tallest image's aspect ratio (so no image is
+  // cropped and the stage doesn't change height as you swipe), clamped to the
+  // min/max bounds above. Starts at square and grows/shrinks as images load.
+  const [stageHeight, setStageHeight] = useState(screenWidth);
+
+  const onImageLoad = (e) => {
+    const { width: w, height: h } = e.nativeEvent.source;
+    if (!w || !h) return;
+    const ratio = h / w; // height per unit width
+    const clamped = Math.min(MAX_STAGE_RATIO, Math.max(MIN_STAGE_RATIO, ratio));
+    const desired = Math.round(screenWidth * clamped);
+    // Grow the stage to fit the tallest image so every piece shows in full.
+    setStageHeight((prev) => Math.max(prev, desired));
+  };
 
   const queryClient = useQueryClient();
   const user = useAuthStore((sel) => sel.user);
@@ -170,7 +197,9 @@ export default function ArtworkDetailScreen({ route }) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {/* Image gallery (horizontal pager) */}
+        {/* Image gallery (horizontal pager). Fixed-width slides with a single
+            adaptive stage height; each image is shown in full via "contain"
+            against a neutral backdrop so artwork is never cropped. */}
         <View style={{ position: 'relative' }}>
           {images.length > 0 ? (
             <ScrollView
@@ -180,16 +209,30 @@ export default function ArtworkDetailScreen({ route }) {
               onMomentumScrollEnd={onScrollImages}
             >
               {images.map((uri, i) => (
-                <Image
+                <View
                   key={`${uri}-${i}`}
-                  source={{ uri }}
-                  style={{ width: screenWidth, height: screenWidth }}
-                  resizeMode="cover"
-                />
+                  style={[
+                    s.slide,
+                    { width: screenWidth, height: stageHeight },
+                  ]}
+                >
+                  <Image
+                    source={{ uri }}
+                    style={{ width: screenWidth, height: stageHeight }}
+                    resizeMode="contain"
+                    onLoad={onImageLoad}
+                  />
+                </View>
               ))}
             </ScrollView>
           ) : (
-            <View style={{ width: screenWidth, height: screenWidth, backgroundColor: colors.surface }} />
+            <View
+              style={{
+                width: screenWidth,
+                height: stageHeight,
+                backgroundColor: colors.surface,
+              }}
+            />
           )}
 
           {/* Back button overlaid on the image — solid dark circle for
@@ -356,6 +399,13 @@ function MetaRow({ s, label, value }) {
 
 function makeStyles({ colors, spacing, fontSize, radius }) {
   return StyleSheet.create({
+    // Each carousel slide: a neutral backdrop so the letterbox space around a
+    // "contain"-fit image reads as intentional rather than as a layout gap.
+    slide: {
+      backgroundColor: colors.surfaceMuted ?? colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     backWrap: {
       position: 'absolute',
       left: spacing.lg,
