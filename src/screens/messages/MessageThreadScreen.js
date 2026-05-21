@@ -224,7 +224,7 @@ export default function MessageThreadScreen({ route }) {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top + 56 : 0}
+        keyboardVerticalOffset={0}
       >
         {isLoading ? (
           <View style={s.centerLoad}>
@@ -263,9 +263,7 @@ export default function MessageThreadScreen({ route }) {
           />
         )}
 
-        {/* Composer. The extra bottom padding creates a small gap between the
-            input and the top of the keyboard (in Android "pan" mode, padding
-            below the input is what the OS clears above the keyboard). */}
+        {/* Composer */}
         <View style={[s.composer, { paddingBottom: insets.bottom + 20 }]}>
           <TextInput
             style={s.input}
