@@ -264,5 +264,15 @@
   "done": "Klar",
   "eventTicketPrice": "Biljettpris",
   "eventCurrency": "Valuta",
-  "eventPriceTBA": "Pris meddelas"
+  "eventPriceTBA": "Pris meddelas",
+  "messagesTitle": "Meddelanden",
+  "messagesEmpty": "Inga konversationer än.",
+  "messagesThreadEmpty": "Säg hej 👋",
+  "messagesComposePlaceholder": "Meddelande…",
+  "messagesSend": "Skicka",
+  "messagesUnread": "olästa",
+  "messagesYouPrefix": "Du",
+  "messagesUnknownUser": "Okänd",
+  "messagesAboutArtwork": "Om detta verk",
+  "artworkMessageArtist": "Meddela konstnär"
 }

@@ -1,7 +1,10 @@
 // src/components/ArtworkGrid.js
 //
-// 3-column responsive grid of ArtworkCards. Column width is computed from
-// the screen width passed in by the parent.
+// 3-column responsive grid of ArtworkCards. Column width is computed from the
+// screen width and floored to whole pixels so that three cells plus their two
+// gaps are *guaranteed* to fit within the row — otherwise Android's sub-pixel
+// rounding can push the total past the container width and wrap the third cell
+// down, collapsing the grid to 2 columns.
 
 import { useMemo } from "react";
 import { View, StyleSheet, useWindowDimensions } from "react-native";
@@ -17,7 +20,10 @@ export default function ArtworkGrid({ artworks, onPress }) {
   const colWidth = useMemo(() => {
     const colGap = spacing.xs;
     const hPad = spacing.lg;
-    return (screenWidth - hPad * 2 - colGap * (COLUMNS - 1)) / COLUMNS;
+    const available = screenWidth - hPad * 2 - colGap * (COLUMNS - 1);
+    // Floor to whole pixels: leftover fractional pixels become harmless slack
+    // inside the row instead of overflowing it and forcing a wrap.
+    return Math.floor(available / COLUMNS);
   }, [screenWidth, spacing.xs, spacing.lg]);
 
   return (

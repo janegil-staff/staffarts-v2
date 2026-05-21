@@ -3,7 +3,7 @@
 // Viewing a user's public profile (reached by tapping an artist). Shows
 // avatar, name, bio, their artworks, and an action button:
 //   - viewing your OWN profile  → "Edit profile"
-//   - viewing someone ELSE's    → "Message" (inert for now; chat entry point)
+//   - viewing someone ELSE's    → "Message" (opens a chat thread)
 //
 // Receives { userId, profile? } via route params. The optional `profile`
 // (e.g. the populated artist object from an artwork) renders instantly
@@ -61,10 +61,19 @@ export default function PublicProfileScreen({ route }) {
   const onAction = () => {
     if (isSelf) {
       navigation.navigate('EditProfile');
-    } else {
-      // TODO: open a conversation with this user once chat is built:
-      // navigation.navigate('Conversation', { userId });
+      return;
     }
+    // Open a chat thread with this user. No conversationId yet — the first
+    // send creates it server-side (handled in MessageThreadScreen/useThread).
+    if (!me) {
+      navigation.navigate('AuthGate');
+      return;
+    }
+    navigation.navigate('MessageThread', {
+      recipientId: String(userId),
+      recipientName: name,
+      recipientImage: avatar || null,
+    });
   };
 
   return (
@@ -109,10 +118,7 @@ export default function PublicProfileScreen({ route }) {
             <ActivityIndicator color={colors.accent} style={{ marginTop: 8 }} />
           ) : null}
 
-          {/* Bio — styled like the personal profile: real bio if present,
-              otherwise an italic placeholder. While the full profile is
-              still loading and the passed-in object carries no bio, show
-              a spinner-free quiet state rather than the placeholder. */}
+          {/* Bio — real bio if present, otherwise an italic placeholder. */}
           {user.bio ? (
             <Text style={s.bio}>{user.bio}</Text>
           ) : isLoadingProfile ? null : (

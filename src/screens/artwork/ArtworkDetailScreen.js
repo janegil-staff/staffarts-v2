@@ -7,7 +7,7 @@
 // Image gallery: a horizontal paging carousel. Because paging requires every
 // slide to share the same width (screenWidth), the stage uses a single
 // adaptive height (driven by the images' real aspect ratios) and shows each
-// image with resizeMode="contain" — so the customer always sees the full,
+// image with resizeMode="contain" -- so the customer always sees the full,
 // uncropped artwork. Letterbox space is filled with a neutral backdrop.
 
 import { useState } from 'react';
@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, Pencil, Trash2, MessageCircle } from 'lucide-react-native';
 
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
@@ -133,7 +133,24 @@ export default function ArtworkDetailScreen({ route }) {
     });
   };
 
-  // ── Owner actions ────────────────────────────────────────────────────
+  // Open a chat thread with the artist. No conversationId yet -- the first
+  // send creates the thread server-side. artworkRef attaches this piece to
+  // the first message as "about this work" context.
+  const onMessageArtist = () => {
+    if (!canViewArtist) return;
+    if (!user) {
+      navigation.navigate('AuthGate');
+      return;
+    }
+    navigation.navigate('MessageThread', {
+      recipientId: String(artistId),
+      recipientName: artistName,
+      recipientImage: artistAvatar || null,
+      artworkRef: id,
+    });
+  };
+
+  // -- Owner actions ----------------------------------------------------
   const refreshAll = () => {
     queryClient.invalidateQueries({ queryKey: ['artworks'] });
     if (id) queryClient.invalidateQueries({ queryKey: ['artwork', id] });
@@ -235,7 +252,7 @@ export default function ArtworkDetailScreen({ route }) {
             />
           )}
 
-          {/* Back button overlaid on the image — solid dark circle for
+          {/* Back button overlaid on the image -- solid dark circle for
               guaranteed visibility against any artwork. */}
           <View style={[s.backWrap, { top: spacing.lg + 24 }]}>
             <Pressable
@@ -321,7 +338,7 @@ export default function ArtworkDetailScreen({ route }) {
             </View>
           )}
 
-          {/* Artist — tappable, routes to the artist's public profile */}
+          {/* Artist -- tappable, routes to the artist's public profile */}
           {!!artistName && (
             <Pressable
               onPress={canViewArtist ? onViewArtist : undefined}
@@ -360,6 +377,19 @@ export default function ArtworkDetailScreen({ route }) {
 
           {/* Price */}
           {!!priceLabel && <Text style={s.price}>{priceLabel}</Text>}
+
+          {/* Message artist -- only when viewing someone else's work */}
+          {canViewArtist && (
+            <Pressable
+              onPress={onMessageArtist}
+              style={({ pressed }) => [s.messageBtn, pressed && { opacity: 0.85 }]}
+            >
+              <MessageCircle size={18} color="#fff" strokeWidth={2} />
+              <Text style={s.messageBtnText}>
+                {t('artworkMessageArtist') ?? 'Message artist'}
+              </Text>
+            </Pressable>
+          )}
 
           {/* Description */}
           {!!artwork.description && (
@@ -502,6 +532,17 @@ function makeStyles({ colors, spacing, fontSize, radius }) {
       fontWeight: '700',
       color: colors.text,
     },
+    messageBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      marginTop: spacing.lg,
+      backgroundColor: colors.accent,
+      paddingVertical: 14,
+      borderRadius: 12,
+    },
+    messageBtnText: { color: '#fff', fontSize: fontSize.md, fontWeight: '700' },
     description: {
       marginTop: spacing.md,
       fontSize: fontSize.sm,

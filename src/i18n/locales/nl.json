@@ -264,5 +264,15 @@
   "done": "Klaar",
   "eventTicketPrice": "Ticketprijs",
   "eventCurrency": "Valuta",
-  "eventPriceTBA": "Prijs volgt"
+  "eventPriceTBA": "Prijs volgt",
+  "messagesTitle": "Berichten",
+  "messagesEmpty": "Nog geen gesprekken.",
+  "messagesThreadEmpty": "Zeg hallo 👋",
+  "messagesComposePlaceholder": "Bericht…",
+  "messagesSend": "Verstuur",
+  "messagesUnread": "ongelezen",
+  "messagesYouPrefix": "Jij",
+  "messagesUnknownUser": "Onbekend",
+  "messagesAboutArtwork": "Over dit kunstwerk",
+  "artworkMessageArtist": "Bericht kunstenaar"
 }

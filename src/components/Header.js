@@ -3,11 +3,12 @@
 // Shared navy header band. Shows on every main screen.
 //
 // Default behavior:
+//   - Left side: messages icon with unread badge (logged in) or empty
 //   - Right side: avatar (logged in) or "Log in" pill (logged out)
-//   - Left side: empty
 //
 // The logged-in avatar shows the user's profileImage when set, falling back
-// to their initial. Tapping it opens Settings.
+// to their initial. Tapping it opens Settings. The messages icon opens the
+// Messages inbox; it hides itself when logged out.
 //
 // You can override either side with the `left` or `right` props
 // (e.g. a back button on Settings, a close button on NewArtwork).
@@ -27,6 +28,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../stores/authStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../i18n';
+import HeaderMessagesButton from './HeaderMessagesButton';
 
 const HEADER_BG = '#2D4A6E'; // Staff Arts navy
 const HEADER_FG = '#FFFFFF';
@@ -54,7 +56,7 @@ export default function Header({ title = 'Staff Arts', left = null, right = null
   const onAvatarPress = () => navigation.navigate('Settings');
   const onLoginPress = () => navigation.navigate('Login');
 
-  // ── Default right content (no override) ──────────────────────────────
+  // -- Default right content (no override) ------------------------------
   // Show the avatar only when there is a real authenticated user.
   // Otherwise show the Log in pill.
   const defaultRight =
@@ -107,7 +109,8 @@ export default function Header({ title = 'Staff Arts', left = null, right = null
         },
       ]}
     >
-      <View style={styles.leftSlot}>{left}</View>
+      {/* Left slot defaults to the badged messages icon (hidden when logged out). */}
+      <View style={styles.leftSlot}>{left ?? <HeaderMessagesButton />}</View>
 
       <Text style={styles.title} numberOfLines={1}>
         {title}

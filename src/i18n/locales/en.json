@@ -264,5 +264,15 @@
   "done": "Done",
   "eventTicketPrice": "Ticket price",
   "eventCurrency": "Currency",
-  "eventPriceTBA": "Price to be announced"
+  "eventPriceTBA": "Price to be announced",
+  "messagesTitle": "Messages",
+  "messagesEmpty": "No conversations yet.",
+  "messagesThreadEmpty": "Say hello 👋",
+  "messagesComposePlaceholder": "Message…",
+  "messagesSend": "Send",
+  "messagesUnread": "unread",
+  "messagesYouPrefix": "You",
+  "messagesUnknownUser": "Unknown",
+  "messagesAboutArtwork": "About this artwork",
+  "artworkMessageArtist": "Message artist"
 }

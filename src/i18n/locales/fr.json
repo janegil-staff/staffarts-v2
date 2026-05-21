@@ -264,5 +264,15 @@
   "done": "Terminé",
   "eventTicketPrice": "Prix du billet",
   "eventCurrency": "Devise",
-  "eventPriceTBA": "Prix à venir"
+  "eventPriceTBA": "Prix à venir",
+  "messagesTitle": "Messages",
+  "messagesEmpty": "Aucune conversation pour le moment.",
+  "messagesThreadEmpty": "Dites bonjour 👋",
+  "messagesComposePlaceholder": "Message…",
+  "messagesSend": "Envoyer",
+  "messagesUnread": "non lus",
+  "messagesYouPrefix": "Vous",
+  "messagesUnknownUser": "Inconnu",
+  "messagesAboutArtwork": "À propos de cette œuvre",
+  "artworkMessageArtist": "Contacter l'artiste"
 }

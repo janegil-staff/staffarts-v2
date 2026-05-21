@@ -264,5 +264,15 @@
   "done": "Concluído",
   "eventTicketPrice": "Preço do bilhete",
   "eventCurrency": "Moeda",
-  "eventPriceTBA": "Preço a anunciar"
+  "eventPriceTBA": "Preço a anunciar",
+  "messagesTitle": "Mensagens",
+  "messagesEmpty": "Ainda não há conversas.",
+  "messagesThreadEmpty": "Diga olá 👋",
+  "messagesComposePlaceholder": "Mensagem…",
+  "messagesSend": "Enviar",
+  "messagesUnread": "não lidas",
+  "messagesYouPrefix": "Você",
+  "messagesUnknownUser": "Desconhecido",
+  "messagesAboutArtwork": "Sobre esta obra",
+  "artworkMessageArtist": "Mensagem ao artista"
 }

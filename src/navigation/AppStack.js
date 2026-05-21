@@ -26,6 +26,10 @@ import EventDetailScreen from "../screens/shows/EventDetailScreen";
 import ExhibitionDetailScreen from "../screens/shows/ExhibitionDetailScreen";
 import NewEventScreen from "../screens/newEvent/NewEventScreen";
 
+// Messaging
+import ConversationListScreen from "../screens/messages/ConversationListScreen";
+import MessageThreadScreen from "../screens/messages/MessageThreadScreen";
+
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import ForgotPinScreen from "../screens/auth/ForgotPinScreen";
@@ -85,6 +89,10 @@ export default function AppStack() {
         name="ExhibitionDetail"
         component={ExhibitionDetailScreen}
       />
+
+      {/* Messaging */}
+      <Stack.Screen name="Messages" component={ConversationListScreen} />
+      <Stack.Screen name="MessageThread" component={MessageThreadScreen} />
 
       {/* Auth modals */}
       <Stack.Group screenOptions={{ presentation: "modal" }}>

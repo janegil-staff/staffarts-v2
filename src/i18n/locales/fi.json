@@ -264,5 +264,15 @@
   "done": "Valmis",
   "eventTicketPrice": "Lipun hinta",
   "eventCurrency": "Valuutta",
-  "eventPriceTBA": "Hinta ilmoitetaan"
+  "eventPriceTBA": "Hinta ilmoitetaan",
+  "messagesTitle": "Viestit",
+  "messagesEmpty": "Ei vielä keskusteluja.",
+  "messagesThreadEmpty": "Sano hei 👋",
+  "messagesComposePlaceholder": "Viesti…",
+  "messagesSend": "Lähetä",
+  "messagesUnread": "lukematonta",
+  "messagesYouPrefix": "Sinä",
+  "messagesUnknownUser": "Tuntematon",
+  "messagesAboutArtwork": "Tästä teoksesta",
+  "artworkMessageArtist": "Viesti taiteilijalle"
 }

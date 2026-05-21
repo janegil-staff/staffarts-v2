@@ -264,5 +264,15 @@
   "done": "Ferdig",
   "eventTicketPrice": "Billettpris",
   "eventCurrency": "Valuta",
-  "eventPriceTBA": "Pris kommer"
+  "eventPriceTBA": "Pris kommer",
+  "messagesTitle": "Meldinger",
+  "messagesEmpty": "Ingen samtaler ennå.",
+  "messagesThreadEmpty": "Si hei 👋",
+  "messagesComposePlaceholder": "Melding…",
+  "messagesSend": "Send",
+  "messagesUnread": "uleste",
+  "messagesYouPrefix": "Du",
+  "messagesUnknownUser": "Ukjent",
+  "messagesAboutArtwork": "Om dette verket",
+  "artworkMessageArtist": "Send melding til kunstner"
 }

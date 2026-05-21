@@ -264,5 +264,15 @@
   "done": "Færdig",
   "eventTicketPrice": "Billetpris",
   "eventCurrency": "Valuta",
-  "eventPriceTBA": "Pris følger"
+  "eventPriceTBA": "Pris følger",
+  "messagesTitle": "Beskeder",
+  "messagesEmpty": "Ingen samtaler endnu.",
+  "messagesThreadEmpty": "Sig hej 👋",
+  "messagesComposePlaceholder": "Besked…",
+  "messagesSend": "Send",
+  "messagesUnread": "ulæste",
+  "messagesYouPrefix": "Dig",
+  "messagesUnknownUser": "Ukendt",
+  "messagesAboutArtwork": "Om dette værk",
+  "artworkMessageArtist": "Skriv til kunstner"
 }

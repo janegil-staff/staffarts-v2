@@ -264,5 +264,15 @@
   "done": "Fatto",
   "eventTicketPrice": "Prezzo del biglietto",
   "eventCurrency": "Valuta",
-  "eventPriceTBA": "Prezzo da definire"
+  "eventPriceTBA": "Prezzo da definire",
+  "messagesTitle": "Messaggi",
+  "messagesEmpty": "Ancora nessuna conversazione.",
+  "messagesThreadEmpty": "Saluta 👋",
+  "messagesComposePlaceholder": "Messaggio…",
+  "messagesSend": "Invia",
+  "messagesUnread": "non letti",
+  "messagesYouPrefix": "Tu",
+  "messagesUnknownUser": "Sconosciuto",
+  "messagesAboutArtwork": "Su quest'opera",
+  "artworkMessageArtist": "Contatta l'artista"
 }
