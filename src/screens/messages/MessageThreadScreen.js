@@ -74,15 +74,28 @@ export default function MessageThreadScreen({ route }) {
 
   const [draft, setDraft] = useState('');
   const [modVisible, setModVisible] = useState(false);
-  // iOS-only: when the keyboard is open it covers the home indicator, so the
-  // composer's big bottom padding becomes a dead gap above the keyboard. Track
-  // visibility (iOS only — Android uses native "pan" and must NOT be touched,
-  // or the window mis-settles on hide) and shrink the padding while open.
+  // Track keyboard visibility on BOTH platforms. Used only to choose padding /
+  // offset VALUES (not to restructure layout), so it can't cause the window
+  // mis-settle we saw under "pan" — the app is on "resize" now.
   const [kbOpen, setKbOpen] = useState(false);
+  // Android "resize" sometimes doesn't re-measure the window when the keyboard
+  // hides, leaving a black gap until a manual scroll forces re-layout. We force
+  // it ourselves by bumping this nonce on keyboardDidHide, applied to the root
+  // container's flex so React Native recomputes the frame.
+  const [relayout, setRelayout] = useState(0);
   useEffect(() => {
-    if (Platform.OS !== 'ios') return undefined;
-    const show = Keyboard.addListener('keyboardWillShow', () => setKbOpen(true));
-    const hide = Keyboard.addListener('keyboardWillHide', () => setKbOpen(false));
+    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    const show = Keyboard.addListener(showEvt, () => setKbOpen(true));
+    const hide = Keyboard.addListener(hideEvt, () => {
+      setKbOpen(false);
+      if (Platform.OS === 'android') {
+        // Two RAF ticks after hide, nudge a re-layout so the window re-measures.
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => setRelayout((n) => n + 1)),
+        );
+      }
+    });
     return () => {
       show.remove();
       hide.remove();
@@ -195,7 +208,15 @@ export default function MessageThreadScreen({ route }) {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+        // Sub-pixel toggle that changes on keyboardDidHide (Android) to force a
+        // re-layout, clearing the resize black-gap. Imperceptible visually.
+        paddingBottom: relayout % 2 === 0 ? 0 : 0.01,
+      }}
+    >
       {/* Header */}
       <View style={[s.header, { paddingTop: spacing.lg + 24 }]}>
         <Pressable
@@ -234,8 +255,12 @@ export default function MessageThreadScreen({ route }) {
         )}
       </View>
 
-      {/* iOS lifts via KeyboardAvoidingView; Android uses its native "pan"
-          (softwareKeyboardLayoutMode: pan) and needs no avoider here. */}
+      {/* Android in "resize" mode + this KAV ('padding' on both platforms)
+          lifts the composer above the keyboard. */}
+      {/* iOS: KeyboardAvoidingView (padding) lifts the composer. Android: in
+          "resize" mode the window shrinks for the keyboard and the flex layout
+          reflows on its own, so the KAV is a no-op there (behavior undefined) —
+          this avoids residual padding leaving the composer too high at rest. */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -279,8 +304,8 @@ export default function MessageThreadScreen({ route }) {
         )}
 
         {/* Composer. kbOpen is iOS-only; on Android it stays false so the full
-            bottom padding remains and native "pan" handles the lift. */}
-        <View style={[s.composer, { paddingBottom: kbOpen ? 8 : insets.bottom + 20 }]}>
+            bottom padding remains and resize+KAV handle the lift. */}
+        <View style={[s.composer, { paddingBottom: kbOpen ? 2 : insets.bottom }]}>
           <TextInput
             style={s.input}
             value={draft}
