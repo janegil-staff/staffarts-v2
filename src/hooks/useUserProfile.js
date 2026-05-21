@@ -13,7 +13,12 @@ export function useUserProfile(userId, { initialProfile } = {}) {
     queryKey: ['user', userId],
     queryFn: () => userApi.fetchPublicProfile(userId),
     enabled: !!userId,
-    initialData: initialProfile,
+    // placeholderData (not initialData): the passed-in artist object only
+    // has { _id, displayName, profileImage } — no bio. Using it as a
+    // placeholder shows it instantly for the avatar/name while STILL
+    // firing the real fetch, so bio (and anything else missing) fills in.
+    // initialData would seed the cache as "fresh" and skip the fetch.
+    placeholderData: initialProfile,
     staleTime: 60_000,
   });
 

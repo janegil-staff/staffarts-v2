@@ -10,6 +10,7 @@ import ExploreScreen from "../screens/explore/ExploreScreen";
 import ShowsScreen from "../screens/shows/ShowsScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
+import PublicProfileScreen from "../screens/profile/PublicProfileScreen";
 
 import NewArtworkScreen from "../screens/newArtwork/NewArtworkScreen";
 import SettingsScreen from "../screens/settings/SettingsScreen";
@@ -64,6 +65,7 @@ export default function AppStack() {
         options={{ presentation: "modal" }}
       />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="PublicProfile" component={PublicProfileScreen} />
       <Stack.Screen name="AboutApp" component={AboutAppScreen} />
 
       <Stack.Screen name="Settings" component={SettingsScreen} />

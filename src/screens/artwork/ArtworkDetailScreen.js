@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, Pencil, Trash2 } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react-native';
 
 import { useTheme } from '../../theme/ThemeContext';
 import { useT } from '../../i18n';
@@ -78,6 +78,10 @@ export default function ArtworkDetailScreen({ route }) {
     '';
   const artistAvatar = coverImageUrl(artwork.artist?.profileImage);
 
+  // Tappable only when there's a real artist id and the viewer isn't the
+  // owner (no point routing to your own public profile from your own work).
+  const canViewArtist = !!artistId && !isOwner;
+
   const priceLabel = formatPrice(artwork.price, artwork.currency, lang);
   const statusColor = STATUS_COLORS[artwork.status] || colors.textMuted;
   const statusLabel = t(`artworkStatus_${artwork.status}`) ?? artwork.status;
@@ -92,6 +96,14 @@ export default function ArtworkDetailScreen({ route }) {
   const onScrollImages = (e) => {
     const x = e.nativeEvent.contentOffset.x;
     setActiveIdx(Math.round(x / screenWidth));
+  };
+
+  const onViewArtist = () => {
+    if (!canViewArtist) return;
+    navigation.navigate('PublicProfile', {
+      userId: String(artistId),
+      profile: typeof artwork.artist === 'object' ? artwork.artist : undefined,
+    });
   };
 
   // ── Owner actions ────────────────────────────────────────────────────
@@ -266,9 +278,22 @@ export default function ArtworkDetailScreen({ route }) {
             </View>
           )}
 
-          {/* Artist */}
+          {/* Artist — tappable, routes to the artist's public profile */}
           {!!artistName && (
-            <View style={s.artistRow}>
+            <Pressable
+              onPress={canViewArtist ? onViewArtist : undefined}
+              disabled={!canViewArtist}
+              accessibilityRole={canViewArtist ? 'button' : undefined}
+              accessibilityLabel={
+                canViewArtist
+                  ? `${t('viewArtistProfile') ?? 'View profile'}: ${artistName}`
+                  : undefined
+              }
+              style={({ pressed }) => [
+                s.artistRow,
+                pressed && canViewArtist && { opacity: 0.6 },
+              ]}
+            >
               {artistAvatar ? (
                 <Image source={{ uri: artistAvatar }} style={s.artistAvatar} />
               ) : (
@@ -279,7 +304,15 @@ export default function ArtworkDetailScreen({ route }) {
                 </View>
               )}
               <Text style={s.artistName}>{artistName}</Text>
-            </View>
+              {canViewArtist && (
+                <ChevronRight
+                  size={18}
+                  color={colors.textMuted}
+                  strokeWidth={2}
+                  style={{ marginLeft: -2 }}
+                />
+              )}
+            </Pressable>
           )}
 
           {/* Price */}

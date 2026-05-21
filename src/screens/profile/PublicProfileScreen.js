@@ -109,7 +109,17 @@ export default function PublicProfileScreen({ route }) {
             <ActivityIndicator color={colors.accent} style={{ marginTop: 8 }} />
           ) : null}
 
-          {!!user.bio && <Text style={s.bio}>{user.bio}</Text>}
+          {/* Bio — styled like the personal profile: real bio if present,
+              otherwise an italic placeholder. While the full profile is
+              still loading and the passed-in object carries no bio, show
+              a spinner-free quiet state rather than the placeholder. */}
+          {user.bio ? (
+            <Text style={s.bio}>{user.bio}</Text>
+          ) : isLoadingProfile ? null : (
+            <Text style={s.bioPlaceholder}>
+              {t('profileNoBioOther') ?? 'No bio yet.'}
+            </Text>
+          )}
 
           {/* Action button: Edit (self, outlined) or Message (other, filled) */}
           <Pressable
@@ -130,7 +140,7 @@ export default function PublicProfileScreen({ route }) {
               <>
                 <MessageCircle size={16} color="#fff" strokeWidth={2} />
                 <Text style={[s.actionText, s.actionTextFilled]}>
-                  {t('profileMessage') ?? 'Message'}
+                  {t('message') ?? 'Message'}
                 </Text>
               </>
             )}
@@ -191,6 +201,14 @@ function makeStyles({ colors, fontSize, spacing }) {
       lineHeight: 22,
       textAlign: 'center',
       paddingHorizontal: 8,
+    },
+    bioPlaceholder: {
+      marginTop: 12,
+      fontSize: fontSize.sm,
+      color: colors.textMuted,
+      fontStyle: 'italic',
+      textAlign: 'center',
+      paddingHorizontal: 16,
     },
     actionBtn: {
       marginTop: 20,
