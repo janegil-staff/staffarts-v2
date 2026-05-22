@@ -2,25 +2,30 @@
   "expo": {
     "name": "Staff Arts",
     "slug": "staffartsv2",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo-light.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logo-light.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.qupda.staffarts2",
+      "buildNumber": "2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.qupda.staffarts2",
+      "versionCode": 2,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/logo-light.png",
+        "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
@@ -29,6 +34,11 @@
     "plugins": [
       "expo-secure-store",
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4531ac65-ee19-4bbf-a8fd-a08602904f3d"
+      }
+    }
   }
 }
