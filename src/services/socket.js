@@ -24,7 +24,6 @@ import { SOCKET_EVENTS } from '../constants/socketEvents';
 
 let socket = null;
 let queryClientRef = null;
-let getMyId = () => null;
 
 // The conversation currently open on screen, if any. The thread screen sets
 // this so we know whether to append an incoming message to an active thread.
@@ -33,10 +32,13 @@ export function setActiveConversation(id) {
   activeConversationId = id ? String(id) : null;
 }
 
-// Allow the app to wire in the query client + a way to read the current user id.
-export function configureSocket({ queryClient, getCurrentUserId }) {
-  queryClientRef = queryClient;
-  if (typeof getCurrentUserId === 'function') getMyId = getCurrentUserId;
+// Allow the app to wire in the query client. (A previous version also accepted
+// a getCurrentUserId getter, but it was never read anywhere — leaving an
+// assigned-but-unused module variable made Hermes' release minifier strip its
+// declaration while keeping the assignment, throwing
+// "ReferenceError: Property 'getMyId' doesn't exist" on launch. Removed.)
+export function configureSocket({ queryClient } = {}) {
+  queryClientRef = queryClient ?? null;
 }
 
 export function getSocket() {

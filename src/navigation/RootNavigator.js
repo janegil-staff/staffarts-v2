@@ -2,8 +2,7 @@
 //
 // Boots the auth session and hosts the navigator. Also owns the global chat
 // socket lifecycle:
-//   - configureSocket() once, wiring in the query client + a way to read the
-//     current user id.
+//   - configureSocket() once, wiring in the query client.
 //   - connectSocket() whenever a user becomes present (login / restored session)
 //   - disconnectSocket() when the user goes away (logout)
 //
@@ -36,12 +35,9 @@ export default function RootNavigator() {
     bootstrap();
   }, [bootstrap]);
 
-  // Configure the socket service once with the query client + user-id getter.
+  // Configure the socket service once with the query client.
   useEffect(() => {
-    configureSocket({
-      queryClient,
-      getCurrentUserId: () => useAuthStore.getState().user?._id || useAuthStore.getState().user?.id || null,
-    });
+    configureSocket({ queryClient });
   }, [queryClient]);
 
   // Open/close the socket as the auth state changes.
